@@ -1,0 +1,11 @@
+enum CPU6502Instruction: Int {
+case I_NEXT_OP, I_PC_INCR, I_SP_INCR, I_SP_DECR, I_WRITE,
+  I_INTL_to_ADDR_B, I_INTH_to_ADDR_B, I_BRK_SEI,
+  I_PC_to_ADDR_B, I_ADDR_B_to_PC, I_SP_to_ADDR_B,
+  I_AD_to_ADDR_B, I_DATA_to_ADH, I_DATA_to_ADL,
+  I_PCH_to_DATA, I_PCL_to_DATA, I_P_to_DATA,
+  I_DATA_to_PCH, I_DATA_to_PCL, I_DATA_to_P,
+  I_CLC, I_CLD, I_CLI, I_CLV, I_SEC, I_SED, I_SEI,
+  I_A_to_DATA, I_DATA_to_A,
+  I_ADC
+}
