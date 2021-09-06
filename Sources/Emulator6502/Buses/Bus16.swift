@@ -1,6 +1,6 @@
 class Bus16 {
-  var highLines = Bus8()
-  var lowLines = Bus8()
+  let highLines = Register8()
+  let lowLines = Register8()
   var value:UInt16 {
     get { (UInt16(highLines.value) << 8) | UInt16(lowLines.value) }
     set { highLines.value = UInt8(newValue >> 8) ; lowLines.value = UInt8(newValue & 0xff) }

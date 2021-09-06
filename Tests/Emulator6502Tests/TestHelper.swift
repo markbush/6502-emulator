@@ -11,11 +11,16 @@ class TestHelper {
   static let RTI:UInt8 = 0x40
   static let PHA:UInt8 = 0x48
   static let CLI:UInt8 = 0x58
-  static let PLA:UInt8 = 0x68
+  static let ADCIndX:UInt8 = 0x61
   static let ADCZp:UInt8 = 0x65
+  static let PLA:UInt8 = 0x68
   static let ADCImm:UInt8 = 0x69
   static let ADCAbs:UInt8 = 0x6d
+  static let ADCIndY:UInt8 = 0x71
+  static let ADCZpX:UInt8 = 0x75
   static let SEI:UInt8 = 0x78
+  static let ADCAbsY:UInt8 = 0x79
+  static let ADCAbsX:UInt8 = 0x7d
   static let CLV:UInt8 = 0xb8
   static let DEX:UInt8 = 0xca
   static let CLD:UInt8 = 0xd8

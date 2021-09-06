@@ -9,15 +9,20 @@ class CPU6502 : Chip {
   let status = Status6502()
   let ir = Register8() // Instruction Register
   let ad = Register16() // Internal address register
+  let adh:Register8
+  let adl:Register8
   let data = Register8() // Internal data register
 
   var instructionCycle = 0
   var interruptType: InterruptType = .reset
+  var addressCarry = false
 
   let pins: Pins
 
   init(_ pins: Pins) {
     self.pins = pins
+    adh = ad.highLines
+    adl = ad.lowLines
   }
 
   func tick() -> Void {
@@ -130,14 +135,23 @@ class CPU6502 : Chip {
     case .I_A_to_DATA: data.value = a.value
     case .I_DATA_to_PCH: pc.high = data.value
     case .I_DATA_to_PCL: pc.low = data.value
-    case .I_DATA_to_ADH: ad.high = data.value
-    case .I_DATA_to_ADL: ad.low = data.value ; ad.high = 0x00
+    case .I_DATA_to_ADH: adh.value = data.value
+    case .I_DATA_to_ADL: adl.value = data.value ; adh.value = 0x00
     case .I_DATA_to_P: status.value = data.value
     case .I_DATA_to_A: a.value = data.value ; checkNZ(a)
       // Arithmetic
     case .I_ADC:
-      (status.carry, status.overflow) = a.adc(data.value, carryIn: status.carry)
+      (a.value, status.carry, status.overflow) = a.adc(data.value, carryIn: status.carry)
       checkNZ(a)
+    case .I_ADL_plus_X:
+      (adl.value, addressCarry, _) = adl.adc(x.value, carryIn: false)
+    case .I_ADL_plus_Y:
+      (adl.value, addressCarry, _) = adl.adc(y.value, carryIn: false)
+    case .I_CHK_carry:
+      if (!addressCarry) {
+        instructionCycle += 1
+      }
+    case .I_INCR_ADH: adh.incr()
     }
   }
 
@@ -523,7 +537,7 @@ class CPU6502 : Chip {
     [ // 74
       []
     ],
-    [ // 75
+    [ // 75 ADC ZP,X
       []
     ],
     [ // 76
@@ -536,8 +550,12 @@ class CPU6502 : Chip {
       [.I_PC_to_ADDR_B], // Arg - discard, suppress PC incr
       [.I_SEI, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Set interrupt, Next OP
     ],
-    [ // 79
-      []
+    [ // 79 ADC Abs,Y
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read ADL
+      [.I_DATA_to_ADL, .I_ADL_plus_Y, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH, ADL+Y
+      [.I_DATA_to_ADH, .I_CHK_carry, .I_AD_to_ADDR_B], // Read Arg - discard if carry
+      [.I_INCR_ADH, .I_AD_to_ADDR_B], // Read arg from adjusted address
+      [.I_ADC, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Add to A, Next OP
     ],
     [ // 7a
       []
@@ -548,8 +566,12 @@ class CPU6502 : Chip {
     [ // 7c
       []
     ],
-    [ // 7d
-      []
+    [ // 7d ADC Abs,X
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read ADL
+      [.I_DATA_to_ADL, .I_ADL_plus_X, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH, ADL+X
+      [.I_DATA_to_ADH, .I_CHK_carry, .I_AD_to_ADDR_B], // Read Arg - discard if carry
+      [.I_INCR_ADH, .I_AD_to_ADDR_B], // Read arg from adjusted address
+      [.I_ADC, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Add to A, Next OP
     ],
     [ // 7e
       []
