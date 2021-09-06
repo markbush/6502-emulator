@@ -538,7 +538,10 @@ class CPU6502 : Chip {
       []
     ],
     [ // 75 ADC ZP,X
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read ADL
+      [.I_DATA_to_ADL, .I_AD_to_ADDR_B, .I_ADL_plus_X], // Read arg, ADL+X
+      [.I_AD_to_ADDR_B], // Read arg from adjusted address
+      [.I_ADC, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Add to A, Next OP
     ],
     [ // 76
       []
