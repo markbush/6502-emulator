@@ -5,11 +5,11 @@ import Foundation
 final class StatusTests: XCTestCase {
   func clear(_ name: String, op: UInt8, flag: UInt8) {
     print("debug: test"+name)
-    let memory = TestHelper.initMemory()
+    let pins = Pins()
+    let memory = TestHelper.initMemory(pins)
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = op
     memory[TestHelper.RES_ADDR&+1] = TestHelper.NOP
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
@@ -37,11 +37,11 @@ final class StatusTests: XCTestCase {
 
   func set(_ name: String, op: UInt8, flag: UInt8) {
     print("debug: test"+name)
-    let memory = TestHelper.initMemory()
+    let pins = Pins()
+    let memory = TestHelper.initMemory(pins)
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = op
     memory[TestHelper.RES_ADDR&+1] = TestHelper.NOP
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 

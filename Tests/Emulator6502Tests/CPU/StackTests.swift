@@ -5,12 +5,12 @@ import Foundation
 final class StackTests: XCTestCase {
   func testPha() {
     print("debug: testPha")
+    let pins = Pins()
     let testValue:UInt8 = 0x24
-    let memory = TestHelper.initMemory()
+    let memory = TestHelper.initMemory(pins)
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.PHA
     memory[TestHelper.RES_ADDR&+1] = TestHelper.NOP
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
@@ -42,14 +42,14 @@ final class StackTests: XCTestCase {
 
   func testPlaPositive() {
     print("debug: testPlaPositive")
+    let pins = Pins()
     let testValue:UInt8 = 0x24
-    let memory = TestHelper.initMemory()
+    let memory = TestHelper.initMemory(pins)
     // First OP after reset is op
     let stackTopAddr = UInt16(0x0100) | UInt16(TestHelper.STACK_TOP)
     memory[TestHelper.RES_ADDR] = TestHelper.PLA
     memory[TestHelper.RES_ADDR&+1] = TestHelper.NOP
     memory[stackTopAddr] = testValue
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
@@ -88,14 +88,14 @@ final class StackTests: XCTestCase {
 
   func testPlaNegative() {
     print("debug: testPlaNegative")
+    let pins = Pins()
     let testValue:UInt8 = 0xd4 // Negative value
-    let memory = TestHelper.initMemory()
+    let memory = TestHelper.initMemory(pins)
     // First OP after reset is op
     let stackTopAddr = UInt16(0x0100) | UInt16(TestHelper.STACK_TOP)
     memory[TestHelper.RES_ADDR] = TestHelper.PLA
     memory[TestHelper.RES_ADDR&+1] = TestHelper.NOP
     memory[stackTopAddr] = testValue
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
@@ -134,14 +134,14 @@ final class StackTests: XCTestCase {
 
   func testPlaZero() {
     print("debug: testPlaZero")
+    let pins = Pins()
     let testValue:UInt8 = 0x00
-    let memory = TestHelper.initMemory()
+    let memory = TestHelper.initMemory(pins)
     // First OP after reset is op
     let stackTopAddr = UInt16(0x0100) | UInt16(TestHelper.STACK_TOP)
     memory[TestHelper.RES_ADDR] = TestHelper.PLA
     memory[TestHelper.RES_ADDR&+1] = TestHelper.NOP
     memory[stackTopAddr] = testValue
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
@@ -180,12 +180,12 @@ final class StackTests: XCTestCase {
 
   func testPhp() {
     print("debug: testPhp")
+    let pins = Pins()
     let testValue:UInt8 = 0x24
-    let memory = TestHelper.initMemory()
+    let memory = TestHelper.initMemory(pins)
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.PHP
     memory[TestHelper.RES_ADDR&+1] = TestHelper.NOP
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
@@ -217,14 +217,14 @@ final class StackTests: XCTestCase {
 
   func testPlp() {
     print("debug: testPlp")
+    let pins = Pins()
     let testValue:UInt8 = 0x24
-    let memory = TestHelper.initMemory()
+    let memory = TestHelper.initMemory(pins)
     // First OP after reset is op
     let stackTopAddr = UInt16(0x0100) | UInt16(TestHelper.STACK_TOP)
     memory[TestHelper.RES_ADDR] = TestHelper.PLP
     memory[TestHelper.RES_ADDR&+1] = TestHelper.NOP
     memory[stackTopAddr] = testValue
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 

@@ -5,10 +5,10 @@ import Foundation
 final class InterruptsTests: XCTestCase {
   func testStartup() throws {
     print("debug: testStartup")
-    let memory = TestHelper.initMemory()
+    let pins = Pins()
+    let memory = TestHelper.initMemory(pins)
     // First OP after reset is NOP
     memory[TestHelper.RES_ADDR] = TestHelper.NOP
-    let pins = Pins()
     pins.data.value = TestHelper.ORAInd // preload data bus with junk
     let cpu = CPU6502(pins)
     cpu.reset()
@@ -62,10 +62,10 @@ final class InterruptsTests: XCTestCase {
 
   func testBreak() throws {
     print("debug: testBreak")
-    let memory = TestHelper.initMemory()
+    let pins = Pins()
+    let memory = TestHelper.initMemory(pins)
     // First OP after reset is BRK
     memory[TestHelper.RES_ADDR] = TestHelper.BRK
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
@@ -116,10 +116,10 @@ final class InterruptsTests: XCTestCase {
 
   func testNmiWithInterruptsEnabled() throws {
     print("debug: testNmiWithInterruptsEnabled")
-    let memory = TestHelper.initMemory()
+    let pins = Pins()
+    let memory = TestHelper.initMemory(pins)
     // First OP after reset is NOP
     memory[TestHelper.RES_ADDR] = TestHelper.NOP
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
@@ -173,10 +173,10 @@ final class InterruptsTests: XCTestCase {
 
   func testNmiWithInterruptsDisabled() throws {
     print("debug: testNmiWithInterruptsDisabled")
-    let memory = TestHelper.initMemory()
+    let pins = Pins()
+    let memory = TestHelper.initMemory(pins)
     // First OP after reset is NOP
     memory[TestHelper.RES_ADDR] = TestHelper.NOP
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
@@ -230,10 +230,10 @@ final class InterruptsTests: XCTestCase {
 
   func testIrqWithInterruptsEnabled() throws {
     print("debug: testIrqWithInterruptsEnabled")
-    let memory = TestHelper.initMemory()
+    let pins = Pins()
+    let memory = TestHelper.initMemory(pins)
     // First OP after reset is NOP
     memory[TestHelper.RES_ADDR] = TestHelper.NOP
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
@@ -287,10 +287,10 @@ final class InterruptsTests: XCTestCase {
 
   func testIrqWithInterruptsDisabled() throws {
     print("debug: testIrqWithInterruptsDisabled")
-    let memory = TestHelper.initMemory()
+    let pins = Pins()
+    let memory = TestHelper.initMemory(pins)
     // First OP after reset is NOP
     memory[TestHelper.RES_ADDR] = TestHelper.NOP
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
@@ -308,14 +308,14 @@ final class InterruptsTests: XCTestCase {
 
   func testRti() throws {
     print("debug: testRti")
-    let memory = TestHelper.initMemory()
+    let pins = Pins()
+    let memory = TestHelper.initMemory(pins)
     // First OP after reset is BRK
     memory[TestHelper.RES_ADDR] = TestHelper.BRK
     memory[TestHelper.RES_ADDR&+1] = TestHelper.BRK // Should be ignored
     memory[TestHelper.RES_ADDR&+2] = TestHelper.NOP
     // At IRQ, just return
     memory[TestHelper.IRQ_ADDR] = TestHelper.RTI
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 

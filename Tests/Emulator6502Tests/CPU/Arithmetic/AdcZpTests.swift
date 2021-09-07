@@ -5,16 +5,16 @@ import Foundation
 final class AdcZpTests: XCTestCase {
   func testAdcZpPositive() {
     print("debug: testAdcZpPositive")
+    let pins = Pins()
     let testValue1:UInt8 = 0x26
     let testValue2:UInt8 = 0x1c
-    let memory = TestHelper.initMemory()
+    let memory = TestHelper.initMemory(pins)
     let memStore:UInt16 = 0x003c
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.ADCZp
     memory[TestHelper.RES_ADDR&+1] = UInt8(memStore & 0xff) // low byte
     memory[TestHelper.RES_ADDR&+2] = TestHelper.NOP
     memory[memStore] = testValue2
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
@@ -52,16 +52,16 @@ final class AdcZpTests: XCTestCase {
 
   func testAdcZpZero() {
     print("debug: testAdcImmZero")
+    let pins = Pins()
     let testValue1:UInt8 = 0xd3
     let testValue2:UInt8 = 0x2d
-    let memory = TestHelper.initMemory()
+    let memory = TestHelper.initMemory(pins)
     let memStore:UInt16 = 0x003c
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.ADCZp
     memory[TestHelper.RES_ADDR&+1] = UInt8(memStore & 0xff) // low byte
     memory[TestHelper.RES_ADDR&+2] = TestHelper.NOP
     memory[memStore] = testValue2
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
@@ -99,16 +99,16 @@ final class AdcZpTests: XCTestCase {
 
   func testAdcZpNegative() {
     print("debug: testAdcZpNegative")
+    let pins = Pins()
     let testValue1:UInt8 = 0x93
     let testValue2:UInt8 = 0x2d
-    let memory = TestHelper.initMemory()
+    let memory = TestHelper.initMemory(pins)
     let memStore:UInt16 = 0x003c
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.ADCZp
     memory[TestHelper.RES_ADDR&+1] = UInt8(memStore & 0xff) // low byte
     memory[TestHelper.RES_ADDR&+2] = TestHelper.NOP
     memory[memStore] = testValue2
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
@@ -146,16 +146,16 @@ final class AdcZpTests: XCTestCase {
 
   func testAdcZpPositiveOverflow() {
     print("debug: testAdcZpPositiveOverflow")
+    let pins = Pins()
     let testValue1:UInt8 = 0x63
     let testValue2:UInt8 = 0x3b
-    let memory = TestHelper.initMemory()
+    let memory = TestHelper.initMemory(pins)
     let memStore:UInt16 = 0x003c
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.ADCZp
     memory[TestHelper.RES_ADDR&+1] = UInt8(memStore & 0xff) // low byte
     memory[TestHelper.RES_ADDR&+2] = TestHelper.NOP
     memory[memStore] = testValue2
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
@@ -192,16 +192,16 @@ final class AdcZpTests: XCTestCase {
 
   func testAdcZpNegativeOverflow() {
     print("debug: testAdcZpNegativeOverflow")
+    let pins = Pins()
     let testValue1:UInt8 = 0xb3
     let testValue2:UInt8 = 0x9d
-    let memory = TestHelper.initMemory()
+    let memory = TestHelper.initMemory(pins)
     let memStore:UInt16 = 0x003c
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.ADCZp
     memory[TestHelper.RES_ADDR&+1] = UInt8(memStore & 0xff) // low byte
     memory[TestHelper.RES_ADDR&+2] = TestHelper.NOP
     memory[memStore] = testValue2
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 

@@ -5,9 +5,10 @@ import Foundation
 final class AdcAbsYTests: XCTestCase {
   func testAdcAbsYNoPageChange() {
     print("debug: testAdcAbsYNoPageChange")
+    let pins = Pins()
     let testValue1:UInt8 = 0x26
     let testValue2:UInt8 = 0x1c
-    let memory = TestHelper.initMemory()
+    let memory = TestHelper.initMemory(pins)
     let memStore:UInt16 = 0x1a3c
     let offset:UInt8 = 0x05
     let actualStore:UInt16 = 0x1a41
@@ -17,7 +18,6 @@ final class AdcAbsYTests: XCTestCase {
     memory[TestHelper.RES_ADDR&+2] = UInt8(memStore >> 8) // high byte
     memory[TestHelper.RES_ADDR&+3] = TestHelper.NOP
     memory[actualStore] = testValue2
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
     cpu.y.value = offset // Index offset from base address
@@ -54,9 +54,10 @@ final class AdcAbsYTests: XCTestCase {
 
   func testAdcAbsYWithPageChange() {
     print("debug: testAdcAbsYWithPageChange")
+    let pins = Pins()
     let testValue1:UInt8 = 0x26
     let testValue2:UInt8 = 0x1c
-    let memory = TestHelper.initMemory()
+    let memory = TestHelper.initMemory(pins)
     let memStore:UInt16 = 0x1afc
     let offset:UInt8 = 0x05
     let actualStore:UInt16 = 0x1b01
@@ -66,7 +67,6 @@ final class AdcAbsYTests: XCTestCase {
     memory[TestHelper.RES_ADDR&+2] = UInt8(memStore >> 8) // high byte
     memory[TestHelper.RES_ADDR&+3] = TestHelper.NOP
     memory[actualStore] = testValue2
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
     cpu.y.value = offset // Index offset from base address

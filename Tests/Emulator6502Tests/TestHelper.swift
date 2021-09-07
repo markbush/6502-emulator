@@ -47,8 +47,8 @@ class TestHelper {
   static let IRQ_ADDR_LOW = UInt8(IRQ_ADDR & 0xff) // IRQ/BRK vector
   static let IRQ_ADDR_HIGH = UInt8(IRQ_ADDR >> 8)
 
-  static func initMemory() -> Memory {
-    let mem = Memory()
+  static func initMemory(_ pins: Pins) -> Memory {
+    let mem = Memory(pins)
     mem[NMI_VEC_LOW] = NMI_ADDR_LOW
     mem[NMI_VEC_HIGH] = NMI_ADDR_HIGH
     mem[RES_VEC_LOW] = RES_ADDR_LOW
@@ -60,11 +60,7 @@ class TestHelper {
 
   static func cycle(_ cpu: CPU6502, pins: Pins, mem: Memory) {
     cpu.tick()
-    if pins.read.isHigh() {
-      pins.data.value = mem[pins.address.value]
-    } else {
-      mem[pins.address.value] = pins.data.value
-    }
+    mem.tick()
   }
 
   static func run(_ cpu: CPU6502, pins: Pins, mem: Memory, forCycles cycles:Int) {

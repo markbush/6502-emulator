@@ -5,9 +5,10 @@ import Foundation
 final class AdcAbsTests: XCTestCase {
   func testAdcAbsPositive() {
     print("debug: testAdcAbsPositive")
+    let pins = Pins()
     let testValue1:UInt8 = 0x26
     let testValue2:UInt8 = 0x1c
-    let memory = TestHelper.initMemory()
+    let memory = TestHelper.initMemory(pins)
     let memStore:UInt16 = 0x1a3c
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.ADCAbs
@@ -15,7 +16,6 @@ final class AdcAbsTests: XCTestCase {
     memory[TestHelper.RES_ADDR&+2] = UInt8(memStore >> 8) // high byte
     memory[TestHelper.RES_ADDR&+3] = TestHelper.NOP
     memory[memStore] = testValue2
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
@@ -57,9 +57,10 @@ final class AdcAbsTests: XCTestCase {
 
   func testAdcAbsZero() {
     print("debug: testAdcImmZero")
+    let pins = Pins()
     let testValue1:UInt8 = 0xd3
     let testValue2:UInt8 = 0x2d
-    let memory = TestHelper.initMemory()
+    let memory = TestHelper.initMemory(pins)
     let memStore:UInt16 = 0x1a3c
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.ADCAbs
@@ -67,7 +68,6 @@ final class AdcAbsTests: XCTestCase {
     memory[TestHelper.RES_ADDR&+2] = UInt8(memStore >> 8) // high byte
     memory[TestHelper.RES_ADDR&+3] = TestHelper.NOP
     memory[memStore] = testValue2
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
@@ -109,9 +109,10 @@ final class AdcAbsTests: XCTestCase {
 
   func testAdcAbsNegative() {
     print("debug: testAdcAbsNegative")
+    let pins = Pins()
     let testValue1:UInt8 = 0x93
     let testValue2:UInt8 = 0x2d
-    let memory = TestHelper.initMemory()
+    let memory = TestHelper.initMemory(pins)
     let memStore:UInt16 = 0x1a3c
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.ADCAbs
@@ -119,7 +120,6 @@ final class AdcAbsTests: XCTestCase {
     memory[TestHelper.RES_ADDR&+2] = UInt8(memStore >> 8) // high byte
     memory[TestHelper.RES_ADDR&+3] = TestHelper.NOP
     memory[memStore] = testValue2
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
@@ -161,9 +161,10 @@ final class AdcAbsTests: XCTestCase {
 
   func testAdcAbsPositiveOverflow() {
     print("debug: testAdcAbsPositiveOverflow")
+    let pins = Pins()
     let testValue1:UInt8 = 0x63
     let testValue2:UInt8 = 0x3b
-    let memory = TestHelper.initMemory()
+    let memory = TestHelper.initMemory(pins)
     let memStore:UInt16 = 0x1a3c
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.ADCAbs
@@ -171,7 +172,6 @@ final class AdcAbsTests: XCTestCase {
     memory[TestHelper.RES_ADDR&+2] = UInt8(memStore >> 8) // high byte
     memory[TestHelper.RES_ADDR&+3] = TestHelper.NOP
     memory[memStore] = testValue2
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
@@ -212,9 +212,10 @@ final class AdcAbsTests: XCTestCase {
 
   func testAdcAbsNegativeOverflow() {
     print("debug: testAdcAbsNegativeOverflow")
+    let pins = Pins()
     let testValue1:UInt8 = 0xb3
     let testValue2:UInt8 = 0x9d
-    let memory = TestHelper.initMemory()
+    let memory = TestHelper.initMemory(pins)
     let memStore:UInt16 = 0x1a3c
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.ADCAbs
@@ -222,7 +223,6 @@ final class AdcAbsTests: XCTestCase {
     memory[TestHelper.RES_ADDR&+2] = UInt8(memStore >> 8) // high byte
     memory[TestHelper.RES_ADDR&+3] = TestHelper.NOP
     memory[memStore] = testValue2
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 

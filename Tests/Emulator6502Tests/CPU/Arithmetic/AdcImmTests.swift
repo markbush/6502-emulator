@@ -5,14 +5,14 @@ import Foundation
 final class AdcImmTests: XCTestCase {
   func testAdcImmPositive() {
     print("debug: testAdcImmPositive")
+    let pins = Pins()
     let testValue1:UInt8 = 0x26
     let testValue2:UInt8 = 0x1c
-    let memory = TestHelper.initMemory()
+    let memory = TestHelper.initMemory(pins)
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.ADCImm
     memory[TestHelper.RES_ADDR&+1] = testValue2
     memory[TestHelper.RES_ADDR&+2] = TestHelper.NOP
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
@@ -45,14 +45,14 @@ final class AdcImmTests: XCTestCase {
 
   func testAdcImmZero() {
     print("debug: testAdcImmZero")
+    let pins = Pins()
     let testValue1:UInt8 = 0xd3
     let testValue2:UInt8 = 0x2d
-    let memory = TestHelper.initMemory()
+    let memory = TestHelper.initMemory(pins)
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.ADCImm
     memory[TestHelper.RES_ADDR&+1] = testValue2
     memory[TestHelper.RES_ADDR&+2] = TestHelper.NOP
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
@@ -85,14 +85,14 @@ final class AdcImmTests: XCTestCase {
 
   func testAdcImmNegative() {
     print("debug: testAdcImmNegative")
+    let pins = Pins()
     let testValue1:UInt8 = 0x93
     let testValue2:UInt8 = 0x2d
-    let memory = TestHelper.initMemory()
+    let memory = TestHelper.initMemory(pins)
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.ADCImm
     memory[TestHelper.RES_ADDR&+1] = testValue2
     memory[TestHelper.RES_ADDR&+2] = TestHelper.NOP
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
@@ -125,14 +125,14 @@ final class AdcImmTests: XCTestCase {
 
   func testAdcImmPositiveOverflow() {
     print("debug: testAdcImmPositiveOverflow")
+    let pins = Pins()
     let testValue1:UInt8 = 0x63
     let testValue2:UInt8 = 0x3b
-    let memory = TestHelper.initMemory()
+    let memory = TestHelper.initMemory(pins)
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.ADCImm
     memory[TestHelper.RES_ADDR&+1] = testValue2
     memory[TestHelper.RES_ADDR&+2] = TestHelper.NOP
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
@@ -164,14 +164,14 @@ final class AdcImmTests: XCTestCase {
 
   func testAdcImmNegativeOverflow() {
     print("debug: testAdcImmNegativeOverflow")
+    let pins = Pins()
     let testValue1:UInt8 = 0xb3
     let testValue2:UInt8 = 0x9d
-    let memory = TestHelper.initMemory()
+    let memory = TestHelper.initMemory(pins)
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.ADCImm
     memory[TestHelper.RES_ADDR&+1] = testValue2
     memory[TestHelper.RES_ADDR&+2] = TestHelper.NOP
-    let pins = Pins()
     let cpu = CPU6502(pins)
     cpu.reset()
 
