@@ -147,11 +147,12 @@ class CPU6502 : Chip {
       (adl.value, addressCarry, _) = adl.adc(x.value, carryIn: false)
     case .I_ADL_plus_Y:
       (adl.value, addressCarry, _) = adl.adc(y.value, carryIn: false)
+    case .I_ADL_INCR: adl.incr()
+    case .I_ADH_INCR: adh.incr()
     case .I_CHK_carry:
       if (!addressCarry) {
         instructionCycle += 1
       }
-    case .I_INCR_ADH: adh.incr()
     }
   }
 
@@ -468,8 +469,13 @@ class CPU6502 : Chip {
     [ // 60
       []
     ],
-    [ // 61
-      []
+    [ // 61 ADC (ZP,X)
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for BAL)
+      [.I_DATA_to_ADL, .I_AD_to_ADDR_B, .I_ADL_plus_X], // Read 00,BAL, do BAL=BAL+X
+      [.I_AD_to_ADDR_B, .I_ADL_INCR], // Ignore 00,BAL, Read 00,BAL+X (ADL), BAL=BAL+1
+      [.I_AD_to_ADDR_B, .I_DATA_to_ADL], // Save ADL, Read 00,BAL+X+1 (ADH)
+      [.I_DATA_to_ADH, .I_AD_to_ADDR_B], // Save ADH, Read ADH,ADL
+      [.I_ADC, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Add to A, Next OP
     ],
     [ // 62
       []
@@ -481,7 +487,7 @@ class CPU6502 : Chip {
       []
     ],
     [ // 65 ADC ZP
-      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read ADL
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
       [.I_DATA_to_ADL, .I_AD_to_ADDR_B], // Read Arg
       [.I_ADC, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Add to A, Next OP
     ],
@@ -498,7 +504,7 @@ class CPU6502 : Chip {
       [.I_DATA_to_A, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Load A, Next OP
     ],
     [ // 69 ADC Imm
-      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read Arg
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for Arg)
       [.I_ADC, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Add to A, Next OP
     ],
     [ // 6a
@@ -511,7 +517,7 @@ class CPU6502 : Chip {
       []
     ],
     [ // 6d ADC Abs
-      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read ADL
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
       [.I_DATA_to_ADL, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH
       [.I_DATA_to_ADH, .I_AD_to_ADDR_B], // Read Arg
       [.I_ADC, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Add to A, Next OP
@@ -538,7 +544,7 @@ class CPU6502 : Chip {
       []
     ],
     [ // 75 ADC ZP,X
-      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read ADL
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
       [.I_DATA_to_ADL, .I_AD_to_ADDR_B, .I_ADL_plus_X], // Read arg, ADL+X
       [.I_AD_to_ADDR_B], // Read arg from adjusted address
       [.I_ADC, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Add to A, Next OP
@@ -554,10 +560,10 @@ class CPU6502 : Chip {
       [.I_SEI, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Set interrupt, Next OP
     ],
     [ // 79 ADC Abs,Y
-      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read ADL
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
       [.I_DATA_to_ADL, .I_ADL_plus_Y, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH, ADL+Y
       [.I_DATA_to_ADH, .I_CHK_carry, .I_AD_to_ADDR_B], // Read Arg - discard if carry
-      [.I_INCR_ADH, .I_AD_to_ADDR_B], // Read arg from adjusted address
+      [.I_ADH_INCR, .I_AD_to_ADDR_B], // Read arg from adjusted address
       [.I_ADC, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Add to A, Next OP
     ],
     [ // 7a
@@ -570,10 +576,10 @@ class CPU6502 : Chip {
       []
     ],
     [ // 7d ADC Abs,X
-      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read ADL
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
       [.I_DATA_to_ADL, .I_ADL_plus_X, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH, ADL+X
       [.I_DATA_to_ADH, .I_CHK_carry, .I_AD_to_ADDR_B], // Read Arg - discard if carry
-      [.I_INCR_ADH, .I_AD_to_ADDR_B], // Read arg from adjusted address
+      [.I_ADH_INCR, .I_AD_to_ADDR_B], // Read arg from adjusted address
       [.I_ADC, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Add to A, Next OP
     ],
     [ // 7e
