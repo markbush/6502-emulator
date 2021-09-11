@@ -515,8 +515,12 @@ class CPU6502 : Chip {
     [ // 6b
       []
     ],
-    [ // 6c
-      []
+    [ // 6c JMP (Abs)
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for IAL)
+      [.I_DATA_to_ADL, .I_PC_to_ADDR_B], // Read PC (for IAH)
+      [.I_DATA_to_ADH, .I_AD_to_ADDR_B, .I_ADL_INCR], // Read AD (for PCL), Incr AD
+      [.I_DATA_to_PCL, .I_AD_to_ADDR_B], // Read AD (for PCH)
+      [.I_DATA_to_PCH, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 6d ADC Abs
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
