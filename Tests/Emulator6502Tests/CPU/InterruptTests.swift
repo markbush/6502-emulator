@@ -9,7 +9,7 @@ final class InterruptsTests: XCTestCase {
     let memory = TestHelper.initMemory(pins)
     // First OP after reset is NOP
     memory[TestHelper.RES_ADDR] = TestHelper.NOP
-    pins.data.value = TestHelper.ORAInd // preload data bus with junk
+    pins.data.value = 0xff // preload data bus with junk
     let cpu = CPU6502(pins)
     cpu.reset()
 

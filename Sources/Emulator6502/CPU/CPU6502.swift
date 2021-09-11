@@ -166,8 +166,8 @@ class CPU6502 : Chip {
       [.I_DATA_to_PCL, .I_INTH_to_ADDR_B], // Load PCL, high byte of interrupt vector
       [.I_DATA_to_PCH, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR], // Load PCH, Next OP
     ],
-    [ // 01
-      [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR], // Next OP
+    [ // 01 ORA (ZP,X)
+      []
     ],
     [ // 02
       []
@@ -178,10 +178,10 @@ class CPU6502 : Chip {
     [ // 04
       []
     ],
-    [ // 05
+    [ // 05 ORA ZP
       []
     ],
-    [ // 06
+    [ // 06 ASL ZP
       []
     ],
     [ // 07
@@ -192,10 +192,10 @@ class CPU6502 : Chip {
       [.I_SP_to_ADDR_B, .I_P_to_DATA,   .I_WRITE, .I_SP_DECR], // Write P to stack
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
-    [ // 09
+    [ // 09 ORA Imm
       []
     ],
-    [ // 0a
+    [ // 0a ASL
       []
     ],
     [ // 0b
@@ -204,19 +204,19 @@ class CPU6502 : Chip {
     [ // 0c
       []
     ],
-    [ // 0d
+    [ // 0d ORA Abs
       []
     ],
-    [ // 0e
+    [ // 0e ASL Abs
       []
     ],
     [ // 0f
       []
     ],
-    [ // 10
+    [ // 10 BPL
       []
     ],
-    [ // 11
+    [ // 11 ORA (ZP),Y
       []
     ],
     [ // 12
@@ -228,10 +228,10 @@ class CPU6502 : Chip {
     [ // 14
       []
     ],
-    [ // 15
+    [ // 15 ORA ZP,X
       []
     ],
-    [ // 16
+    [ // 16 ASL ZP,X
       []
     ],
     [ // 17
@@ -241,7 +241,7 @@ class CPU6502 : Chip {
       [.I_PC_to_ADDR_B], // Arg - discard, suppress PC incr
       [.I_CLC, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Clear carry, Next OP
     ],
-    [ // 19
+    [ // 19 ORA Abs,Y
       []
     ],
     [ // 1a
@@ -253,19 +253,19 @@ class CPU6502 : Chip {
     [ // 1c
       []
     ],
-    [ // 1d
+    [ // 1d ORA Abs,X
       []
     ],
-    [ // 1e
+    [ // 1e ASL Abs,X
       []
     ],
     [ // 1f
       []
     ],
-    [ // 20
+    [ // 20 JSR
       []
     ],
-    [ // 21
+    [ // 21 AND (ZP,X)
       []
     ],
     [ // 22
@@ -274,13 +274,13 @@ class CPU6502 : Chip {
     [ // 23
       []
     ],
-    [ // 24
+    [ // 24 BIT ZP
       []
     ],
-    [ // 25
+    [ // 25 AND ZP
       []
     ],
-    [ // 26
+    [ // 26 ROL ZP
       []
     ],
     [ // 27
@@ -292,31 +292,31 @@ class CPU6502 : Chip {
       [.I_SP_to_ADDR_B, .I_SP_to_ADDR_B], // Discard, Read SP
       [.I_DATA_to_P, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Load P, Next OP
     ],
-    [ // 29
+    [ // 29 AND Imm
       []
     ],
-    [ // 2a
+    [ // 2a ROL
       []
     ],
     [ // 2b
       []
     ],
-    [ // 2c
+    [ // 2c BIT Abs
       []
     ],
-    [ // 2d
+    [ // 2d AND Abs
       []
     ],
-    [ // 2e
+    [ // 2e ROL Abs
       []
     ],
     [ // 2f
       []
     ],
-    [ // 30
+    [ // 30 BMI
       []
     ],
-    [ // 31
+    [ // 31 AND (ZP),Y
       []
     ],
     [ // 32
@@ -328,10 +328,10 @@ class CPU6502 : Chip {
     [ // 34
       []
     ],
-    [ // 35
+    [ // 35 AND ZP,X
       []
     ],
-    [ // 36
+    [ // 36 ROL ZP,X
       []
     ],
     [ // 37
@@ -341,7 +341,7 @@ class CPU6502 : Chip {
       [.I_PC_to_ADDR_B], // Arg - discard, suppress PC incr
       [.I_SEC, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Set carry, Next OP
     ],
-    [ // 39
+    [ // 39 AND Abs,Y
       []
     ],
     [ // 3a
@@ -353,10 +353,10 @@ class CPU6502 : Chip {
     [ // 3c
       []
     ],
-    [ // 3d
+    [ // 3d AND Abs,X
       []
     ],
-    [ // 3e
+    [ // 3e ROL Abs,X
       []
     ],
     [ // 3f
@@ -370,7 +370,7 @@ class CPU6502 : Chip {
       [.I_DATA_to_PCL, .I_SP_to_ADDR_B], // Load PCL, Read SP
       [.I_DATA_to_PCH, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Load PCH, Next OP
     ],
-    [ // 41
+    [ // 41 EOR (ZP,X)
       []
     ],
     [ // 42
@@ -382,10 +382,10 @@ class CPU6502 : Chip {
     [ // 44
       []
     ],
-    [ // 45
+    [ // 45 EOR ZP
       []
     ],
-    [ // 46
+    [ // 46 LSR ZP
       []
     ],
     [ // 47
@@ -396,10 +396,10 @@ class CPU6502 : Chip {
       [.I_SP_to_ADDR_B, .I_A_to_DATA,   .I_WRITE, .I_SP_DECR], // Write A to stack
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
-    [ // 49
+    [ // 49 EOR Imm
       []
     ],
-    [ // 4a
+    [ // 4a LSR
       []
     ],
     [ // 4b
@@ -410,19 +410,19 @@ class CPU6502 : Chip {
       [.I_PC_to_ADDR_B, .I_DATA_to_PCL], // Read PC (for PCH)
       [.I_DATA_to_PCH, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
-    [ // 4d
+    [ // 4d EOR Abs
       []
     ],
-    [ // 4e
+    [ // 4e LSR Abs
       []
     ],
     [ // 4f
       []
     ],
-    [ // 50
+    [ // 50 BVC
       []
     ],
-    [ // 51
+    [ // 51 EOR (ZP),Y
       []
     ],
     [ // 52
@@ -434,10 +434,10 @@ class CPU6502 : Chip {
     [ // 54
       []
     ],
-    [ // 55
+    [ // 55 EOR ZP,X
       []
     ],
-    [ // 56
+    [ // 56 LSR ZP,X
       []
     ],
     [ // 57
@@ -447,7 +447,7 @@ class CPU6502 : Chip {
       [.I_PC_to_ADDR_B], // Arg - discard, suppress PC incr
       [.I_CLI, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Clear interrupt, Next OP
     ],
-    [ // 59
+    [ // 59 EOR Abs,Y
       []
     ],
     [ // 5a
@@ -459,16 +459,16 @@ class CPU6502 : Chip {
     [ // 5c
       []
     ],
-    [ // 5d
+    [ // 5d EOR Abs,X
       []
     ],
-    [ // 5e
+    [ // 5e LSR Abs,X
       []
     ],
     [ // 5f
       []
     ],
-    [ // 60
+    [ // 60 RTS
       []
     ],
     [ // 61 ADC (ZP,X)
@@ -493,7 +493,7 @@ class CPU6502 : Chip {
       [.I_DATA_to_ADL, .I_AD_to_ADDR_B], // Read Arg
       [.I_ADC, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Add to A, Next OP
     ],
-    [ // 66
+    [ // 66 ROR ZP
       []
     ],
     [ // 67
@@ -509,7 +509,7 @@ class CPU6502 : Chip {
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for Arg)
       [.I_ADC, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Add to A, Next OP
     ],
-    [ // 6a
+    [ // 6a ROR
       []
     ],
     [ // 6b
@@ -528,13 +528,13 @@ class CPU6502 : Chip {
       [.I_DATA_to_ADH, .I_AD_to_ADDR_B], // Read Arg
       [.I_ADC, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Add to A, Next OP
     ],
-    [ // 6e
+    [ // 6e ROR Abs
       []
     ],
     [ // 6f
       []
     ],
-    [ // 70
+    [ // 70 BVS
       []
     ],
     [ // 71 ADC (ZP),Y
@@ -560,7 +560,7 @@ class CPU6502 : Chip {
       [.I_AD_to_ADDR_B], // Read arg from adjusted address
       [.I_ADC, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Add to A, Next OP
     ],
-    [ // 76
+    [ // 76 ROR ZP,X
       []
     ],
     [ // 77
@@ -593,7 +593,7 @@ class CPU6502 : Chip {
       [.I_ADH_INCR, .I_AD_to_ADDR_B], // Read arg from adjusted address
       [.I_ADC, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Add to A, Next OP
     ],
-    [ // 7e
+    [ // 7e ROR Abs,X
       []
     ],
     [ // 7f
@@ -602,7 +602,7 @@ class CPU6502 : Chip {
     [ // 80
       []
     ],
-    [ // 81
+    [ // 81 STA (ZP,X)
       []
     ],
     [ // 82
@@ -611,46 +611,46 @@ class CPU6502 : Chip {
     [ // 83
       []
     ],
-    [ // 84
+    [ // 84 STY ZP
       []
     ],
-    [ // 85
+    [ // 85 STA ZP
       []
     ],
-    [ // 86
+    [ // 86 STX ZP
       []
     ],
     [ // 87
       []
     ],
-    [ // 88
+    [ // 88 DEY
       []
     ],
     [ // 89
       []
     ],
-    [ // 8a
+    [ // 8a TXA
       []
     ],
     [ // 8b
       []
     ],
-    [ // 8c
+    [ // 8c STY Abs
       []
     ],
-    [ // 8d
+    [ // 8d STA Abs
       []
     ],
-    [ // 8e
+    [ // 8e STX Abs
       []
     ],
     [ // 8f
       []
     ],
-    [ // 90
+    [ // 90 BCC
       []
     ],
-    [ // 91
+    [ // 91 STA (ZP),Y
       []
     ],
     [ // 92
@@ -659,25 +659,25 @@ class CPU6502 : Chip {
     [ // 93
       []
     ],
-    [ // 94
+    [ // 94 STY ZP,X
       []
     ],
-    [ // 95
+    [ // 95 STA ZP,X
       []
     ],
-    [ // 96
+    [ // 96 STX ZP,Y
       []
     ],
     [ // 97
       []
     ],
-    [ // 98
+    [ // 98 TYA
       []
     ],
-    [ // 99
+    [ // 99 STA Abs,Y
       []
     ],
-    [ // 9a
+    [ // 9a TSX
       []
     ],
     [ // 9b
@@ -686,7 +686,7 @@ class CPU6502 : Chip {
     [ // 9c
       []
     ],
-    [ // 9d
+    [ // 9d STA Abs,X
       []
     ],
     [ // 9e
@@ -695,58 +695,58 @@ class CPU6502 : Chip {
     [ // 9f
       []
     ],
-    [ // a0
+    [ // a0 LDY Imm
       []
     ],
-    [ // a1
+    [ // a1 LDA (ZP,X)
       []
     ],
-    [ // a2
+    [ // a2 LDX Imm
       []
     ],
     [ // a3
       []
     ],
-    [ // a4
+    [ // a4 LDY ZP
       []
     ],
-    [ // a5
+    [ // a5 LDA ZP
       []
     ],
-    [ // a6
+    [ // a6 LDX ZP
       []
     ],
     [ // a7
       []
     ],
-    [ // a8
+    [ // a8 TAY
       []
     ],
-    [ // a9
+    [ // a9 LDA Imm
       []
     ],
-    [ // aa
+    [ // aa TAX
       []
     ],
     [ // ab
       []
     ],
-    [ // ac
+    [ // ac LDY Abs
       []
     ],
-    [ // ad
+    [ // ad LDA Abs
       []
     ],
-    [ // ae
+    [ // ae LDX Abs
       []
     ],
     [ // af
       []
     ],
-    [ // b0
+    [ // b0 BCS
       []
     ],
-    [ // b1
+    [ // b1 LDA (ZP),Y
       []
     ],
     [ // b2
@@ -755,13 +755,13 @@ class CPU6502 : Chip {
     [ // b3
       []
     ],
-    [ // b4
+    [ // b4 LDY ZP,X
       []
     ],
-    [ // b5
+    [ // b5 LDA ZP,X
       []
     ],
-    [ // b6
+    [ // b6 LDX ZP,Y
       []
     ],
     [ // b7
@@ -771,31 +771,31 @@ class CPU6502 : Chip {
       [.I_PC_to_ADDR_B], // Arg - discard, suppress PC incr
       [.I_CLV, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Clear overflow, Next OP
     ],
-    [ // b9
+    [ // b9 LDA Abs,Y
       []
     ],
-    [ // ba
+    [ // ba TSX
       []
     ],
     [ // bb
       []
     ],
-    [ // bc
+    [ // bc LDY Abs,X
       []
     ],
-    [ // bd
+    [ // bd LDA Abs,X
       []
     ],
-    [ // be
+    [ // be LDX Abs,Y
       []
     ],
     [ // bf
       []
     ],
-    [ // c0
+    [ // c0 CPY Imm
       []
     ],
-    [ // c1
+    [ // c1 CMP (ZP,X)
       []
     ],
     [ // c2
@@ -804,46 +804,46 @@ class CPU6502 : Chip {
     [ // c3
       []
     ],
-    [ // c4
+    [ // c4 CPY ZP
       []
     ],
-    [ // c5
+    [ // c5 CMP ZP
       []
     ],
-    [ // c6
+    [ // c6 DEC ZP
       []
     ],
     [ // c7
       []
     ],
-    [ // c8
+    [ // c8 INY
       []
     ],
-    [ // c9
+    [ // c9 CMP Imm
       []
     ],
-    [ // ca
+    [ // ca DEX
       []
     ],
     [ // cb
       []
     ],
-    [ // cc
+    [ // cc CPY Abs
       []
     ],
-    [ // cd
+    [ // cd CMP Abs
       []
     ],
-    [ // ce
+    [ // ce DEC Abs
       []
     ],
     [ // cf
       []
     ],
-    [ // d0
+    [ // d0 BNE
       []
     ],
-    [ // d1
+    [ // d1 CMP (ZP),Y
       []
     ],
     [ // d2
@@ -855,10 +855,10 @@ class CPU6502 : Chip {
     [ // d4
       []
     ],
-    [ // d5
+    [ // d5 CMP ZP,X
       []
     ],
-    [ // d6
+    [ // d6 DEC ZP,X
       []
     ],
     [ // d7
@@ -868,7 +868,7 @@ class CPU6502 : Chip {
       [.I_PC_to_ADDR_B], // Arg - discard, suppress PC incr
       [.I_CLD, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Clear decimal, Next OP
     ],
-    [ // d9
+    [ // d9 CMP Abs,Y
       []
     ],
     [ // da
@@ -880,19 +880,19 @@ class CPU6502 : Chip {
     [ // dc
       []
     ],
-    [ // dd
+    [ // dd CMP Abs,X
       []
     ],
-    [ // de
+    [ // de DEC Abs,X
       []
     ],
     [ // df
       []
     ],
-    [ // e0
+    [ // e0 CPX Imm
       []
     ],
-    [ // e1
+    [ // e1 SBC (ZP,X)
       []
     ],
     [ // e2
@@ -901,22 +901,22 @@ class CPU6502 : Chip {
     [ // e3
       []
     ],
-    [ // e4
+    [ // e4 CPX ZP
       []
     ],
-    [ // e5
+    [ // e5 SBC ZP
       []
     ],
-    [ // e6
+    [ // e6 INC ZP
       []
     ],
     [ // e7
       []
     ],
-    [ // e8
+    [ // e8 INX
       []
     ],
-    [ // e9
+    [ // e9 SBC Imm
       []
     ],
     [ // ea NOP
@@ -926,22 +926,22 @@ class CPU6502 : Chip {
     [ // eb
       []
     ],
-    [ // ec
+    [ // ec CPX Abs
       []
     ],
-    [ // ed
+    [ // ed SBC Abs
       []
     ],
-    [ // ee
+    [ // ee INC Abs
       []
     ],
     [ // ef
       []
     ],
-    [ // f0
+    [ // f0 BEQ
       []
     ],
-    [ // f1
+    [ // f1 SBC (ZP),Y
       []
     ],
     [ // f2
@@ -953,10 +953,10 @@ class CPU6502 : Chip {
     [ // f4
       []
     ],
-    [ // f5
+    [ // f5 SBC ZP,X
       []
     ],
-    [ // f6
+    [ // f6 INC ZP,X
       []
     ],
     [ // f7
@@ -966,7 +966,7 @@ class CPU6502 : Chip {
       [.I_PC_to_ADDR_B], // Arg - discard, suppress PC incr
       [.I_SED, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Set decimal, Next OP
     ],
-    [ // f9
+    [ // f9 SBC Abs,Y
       []
     ],
     [ // fa
@@ -978,10 +978,10 @@ class CPU6502 : Chip {
     [ // fc
       []
     ],
-    [ // fd
+    [ // fd SBC Abs,X
       []
     ],
-    [ // fe
+    [ // fe INC Abs,X
       []
     ],
     [ // ff
