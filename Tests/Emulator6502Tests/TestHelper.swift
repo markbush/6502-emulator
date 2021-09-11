@@ -10,6 +10,7 @@ class TestHelper {
   static let SEC:UInt8 = 0x38
   static let RTI:UInt8 = 0x40
   static let PHA:UInt8 = 0x48
+  static let JMP:UInt8 = 0x4c
   static let CLI:UInt8 = 0x58
   static let ADCZpIndX:UInt8 = 0x61
   static let ADCZp:UInt8 = 0x65

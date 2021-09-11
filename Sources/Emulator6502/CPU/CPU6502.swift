@@ -405,8 +405,10 @@ class CPU6502 : Chip {
     [ // 4b
       []
     ],
-    [ // 4c
-      []
+    [ // 4c JMP Abs
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for PCL)
+      [.I_PC_to_ADDR_B, .I_DATA_to_PCL], // Read PC (for PCH)
+      [.I_DATA_to_PCH, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 4d
       []
