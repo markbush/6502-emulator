@@ -30,7 +30,7 @@ final class AdcZpIndXTests: XCTestCase {
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
     XCTAssertEqual(pins.data.value, TestHelper.ADCZpIndX)
 
-    print("debug: perform ADC ZpInfX")
+    print("debug: perform ADC ZpIndX")
     // decode OP - fetch BAL
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.ADCZpIndX)
