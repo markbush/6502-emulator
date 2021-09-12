@@ -446,7 +446,10 @@ class CPU6502 : Chip {
       [.I_DATA_to_PCH, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 4d EOR Abs
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
+      [.I_DATA_to_ADL, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH
+      [.I_DATA_to_ADH, .I_AD_to_ADDR_B], // Read Arg
+      [.I_EOR, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Eor to A, Next OP
     ],
     [ // 4e LSR Abs
       []
