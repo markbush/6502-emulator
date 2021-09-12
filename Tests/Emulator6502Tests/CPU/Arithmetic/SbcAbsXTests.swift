@@ -45,7 +45,7 @@ final class SbcAbsXTests: XCTestCase {
 
     // Add arg to A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 &+ testValue2)
+    XCTAssertEqual(cpu.a.value, testValue1 &- testValue2)
 
     // Decode NOP
     TestHelper.cycle(cpu, pins: pins, mem: memory)
@@ -98,7 +98,7 @@ final class SbcAbsXTests: XCTestCase {
 
     // Add arg to A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 &+ testValue2)
+    XCTAssertEqual(cpu.a.value, testValue1 &- testValue2)
 
     // Decode NOP
     TestHelper.cycle(cpu, pins: pins, mem: memory)

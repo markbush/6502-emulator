@@ -39,7 +39,7 @@ final class SbcZpTests: XCTestCase {
     // Add arg to A
     // Flags should be clear
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 &+ testValue2)
+    XCTAssertEqual(cpu.a.value, testValue1 &- testValue2)
     XCTAssertFalse(cpu.status.carry)
     XCTAssertFalse(cpu.status.zero)
     XCTAssertFalse(cpu.status.negative)
@@ -133,7 +133,7 @@ final class SbcZpTests: XCTestCase {
     // Add arg to A
     // Carry, zero should be set, negative overflow clear
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 &+ testValue2)
+    XCTAssertEqual(cpu.a.value, testValue1 &- testValue2)
     XCTAssertFalse(cpu.status.carry)
     XCTAssertFalse(cpu.status.zero)
     XCTAssert(cpu.status.negative)
@@ -179,7 +179,7 @@ final class SbcZpTests: XCTestCase {
 
     // Add arg to A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 &+ testValue2)
+    XCTAssertEqual(cpu.a.value, testValue1 &- testValue2)
     XCTAssertFalse(cpu.status.carry)
     XCTAssertFalse(cpu.status.zero)
     XCTAssert(cpu.status.negative)
@@ -225,7 +225,7 @@ final class SbcZpTests: XCTestCase {
 
     // Add arg to A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 &+ testValue2)
+    XCTAssertEqual(cpu.a.value, testValue1 &- testValue2)
     XCTAssert(cpu.status.carry)
     XCTAssertFalse(cpu.status.zero)
     XCTAssertFalse(cpu.status.negative)
