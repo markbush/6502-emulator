@@ -806,7 +806,9 @@ class CPU6502 : Chip {
       []
     ],
     [ // a5 LDA ZP
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
+      [.I_DATA_to_ADL, .I_AD_to_ADDR_B], // Read Arg
+      [.I_DATA_to_A, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Load A, Next OP
     ],
     [ // a6 LDX ZP
       []
