@@ -25,6 +25,8 @@ final class CmpZpIndXTests: XCTestCase {
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
     cpu.a.value = testValue1 // Set the accumulator
+    // Clear carry, set zero, negative
+    cpu.status.value = Status6502.ZERO | Status6502.NEGATIVE
 
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
@@ -51,9 +53,12 @@ final class CmpZpIndXTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(pins.data.value, testValue2)
 
-    // Add arg to A
+    // Cmp arg to A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 &+ testValue2)
+    XCTAssertEqual(cpu.a.value, testValue1)
+    XCTAssert(cpu.status.carry)
+    XCTAssertFalse(cpu.status.zero)
+    XCTAssertFalse(cpu.status.negative)
 
     // Decode NOP
     TestHelper.cycle(cpu, pins: pins, mem: memory)
