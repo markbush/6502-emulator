@@ -24,6 +24,7 @@ final class SbcAbsYTests: XCTestCase {
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
     cpu.a.value = testValue1 // Set the accumulator
+    cpu.status.value = Status6502.CARRY // Set carry
 
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
@@ -73,6 +74,7 @@ final class SbcAbsYTests: XCTestCase {
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
     cpu.a.value = testValue1 // Set the accumulator
+    cpu.status.value = Status6502.CARRY // Set carry
 
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)

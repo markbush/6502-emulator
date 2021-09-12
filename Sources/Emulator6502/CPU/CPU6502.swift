@@ -973,7 +973,11 @@ class CPU6502 : Chip {
       [.I_SED, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Set decimal, Next OP
     ],
     [ // f9 SBC Abs,Y
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
+      [.I_DATA_to_ADL, .I_ADL_plus_Y, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH, ADL+Y
+      [.I_DATA_to_ADH, .I_CHK_carry, .I_AD_to_ADDR_B], // Read Arg - discard if carry
+      [.I_ADH_INCR, .I_AD_to_ADDR_B], // Read arg from adjusted address
+      [.I_SBC, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Subtract from A, Next OP
     ],
     [ // fa
       []
