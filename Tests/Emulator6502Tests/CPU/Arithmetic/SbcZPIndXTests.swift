@@ -25,6 +25,8 @@ final class SbcZpIndXTests: XCTestCase {
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
     cpu.a.value = testValue1 // Set the accumulator
+    // Set carry
+    cpu.status.value = Status6502.CARRY
 
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
