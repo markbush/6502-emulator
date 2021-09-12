@@ -19,10 +19,10 @@ final class LdxZpYTests: XCTestCase {
     memory[actualStore] = testValue2
     let cpu = CPU6502(pins)
     cpu.reset()
-    cpu.x.value = offset // Index offset from base address
+    cpu.y.value = offset // Index offset from base address
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
-    cpu.a.value = testValue1 // Set the accumulator
+    cpu.x.value = testValue1 // Set X
 
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
@@ -42,9 +42,9 @@ final class LdxZpYTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(pins.data.value, testValue2)
 
-    // Add arg to A
+    // Load arg to X
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 &+ testValue2)
+    XCTAssertEqual(cpu.x.value, testValue2)
 
     // Decode NOP
     TestHelper.cycle(cpu, pins: pins, mem: memory)
@@ -67,10 +67,10 @@ final class LdxZpYTests: XCTestCase {
     memory[actualStore] = testValue2
     let cpu = CPU6502(pins)
     cpu.reset()
-    cpu.x.value = offset // Index offset from base address
+    cpu.y.value = offset // Index offset from base address
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
-    cpu.a.value = testValue1 // Set the accumulator
+    cpu.x.value = testValue1 // Set X
 
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
@@ -90,9 +90,9 @@ final class LdxZpYTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(pins.data.value, testValue2)
 
-    // Add arg to A
+    // Load arg to X
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 &+ testValue2)
+    XCTAssertEqual(cpu.x.value, testValue2)
 
     // Decode NOP
     TestHelper.cycle(cpu, pins: pins, mem: memory)
