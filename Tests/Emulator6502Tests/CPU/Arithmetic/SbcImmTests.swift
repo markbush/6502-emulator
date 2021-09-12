@@ -29,7 +29,7 @@ final class SbcImmTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.SBCImm)
 
-    // Add arg to A
+    // Subtract arg from A
     // Flags should be clear
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.a.value, testValue1 &- testValue2)
@@ -69,7 +69,7 @@ final class SbcImmTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.SBCImm)
 
-    // Add arg to A
+    // Subtract arg from A
     // Carry, zero should be set, negative overflow clear
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.a.value, 0)
@@ -109,7 +109,7 @@ final class SbcImmTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.SBCImm)
 
-    // Add arg to A
+    // Subtract arg from A
     // Carry, zero should be set, negative overflow clear
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.a.value, testValue1 &- testValue2)
@@ -149,7 +149,7 @@ final class SbcImmTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.SBCImm)
 
-    // Add arg to A
+    // Subtract arg from A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.a.value, testValue1 &- testValue2)
     XCTAssertFalse(cpu.status.carry)
@@ -188,7 +188,7 @@ final class SbcImmTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.SBCImm)
 
-    // Add arg to A
+    // Subtract arg from A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.a.value, testValue1 &- testValue2)
     XCTAssert(cpu.status.carry)

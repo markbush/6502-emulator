@@ -25,6 +25,8 @@ final class SbcZpIndYTests: XCTestCase {
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
     cpu.a.value = testValue1 // Set the accumulator
+    // Set carry
+    cpu.status.value = Status6502.CARRY
 
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
@@ -48,7 +50,7 @@ final class SbcZpIndYTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(pins.data.value, testValue2)
 
-    // Add arg to A
+    // Subtract arg from A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.a.value, testValue1 &- testValue2)
 
@@ -79,6 +81,8 @@ final class SbcZpIndYTests: XCTestCase {
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
     cpu.a.value = testValue1 // Set the accumulator
+    // Set carry
+    cpu.status.value = Status6502.CARRY
 
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
@@ -108,7 +112,7 @@ final class SbcZpIndYTests: XCTestCase {
     XCTAssertEqual(pins.address.value, UInt16(0x2402))
     XCTAssertEqual(pins.data.value, testValue2)
 
-    // Add arg to A
+    // Subtract arg from A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.a.value, testValue1 &- testValue2)
 

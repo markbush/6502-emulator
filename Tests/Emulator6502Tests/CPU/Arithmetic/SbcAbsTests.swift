@@ -197,7 +197,7 @@ final class SbcAbsTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(pins.data.value, testValue2)
 
-    // Add arg to A
+    // Subtract arg from A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.a.value, testValue1 &- testValue2)
     XCTAssertFalse(cpu.status.carry)
@@ -248,7 +248,7 @@ final class SbcAbsTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(pins.data.value, testValue2)
 
-    // Add arg to A
+    // Subtract arg from A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.a.value, testValue1 &- testValue2)
     XCTAssert(cpu.status.carry)
