@@ -68,7 +68,7 @@ final class AndImmTests: XCTestCase {
     XCTAssertEqual(cpu.ir.value, TestHelper.ANDImm)
 
     // And arg to A
-    // Carry, zero should be set, negative overflow clear
+    // Zero should be set, negative clear
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.a.value, 0)
     XCTAssert(cpu.status.zero)
@@ -106,7 +106,7 @@ final class AndImmTests: XCTestCase {
     XCTAssertEqual(cpu.ir.value, TestHelper.ANDImm)
 
     // And arg to A
-    // Carry, zero should be set, negative overflow clear
+    // Zero should be set, negative clear
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.a.value, testValue1 & testValue2)
     XCTAssertFalse(cpu.status.zero)

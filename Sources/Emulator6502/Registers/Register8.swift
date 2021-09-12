@@ -34,6 +34,11 @@ class Register8 : Bus8 {
     let negative = (result & 0x80) == 0x80
     return (result, negative, result == 0)
   }
+  func eor(_ from: UInt8) -> (UInt8,Bool,Bool) {
+    let result = value ^ from
+    let negative = (result & 0x80) == 0x80
+    return (result, negative, result == 0)
+  }
 
   func incr() {
     value &+= 1

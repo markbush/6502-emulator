@@ -148,6 +148,8 @@ class CPU6502 : Chip {
       checkNZ(a)
     case .I_AND:
       (a.value, status.negative, status.zero) = a.and(data.value)
+    case .I_EOR:
+      (a.value, status.negative, status.zero) = a.eor(data.value)
     case .I_ADL_plus_X:
       (adl.value, addressCarry, _) = adl.adc(x.value, carryIn: false)
     case .I_ADL_plus_Y:
@@ -429,7 +431,8 @@ class CPU6502 : Chip {
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 49 EOR Imm
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for Arg)
+      [.I_EOR, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Eor to A, Next OP
     ],
     [ // 4a LSR
       []
