@@ -311,7 +311,10 @@ class CPU6502 : Chip {
       []
     ],
     [ // 2d AND Abs
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
+      [.I_DATA_to_ADL, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH
+      [.I_DATA_to_ADH, .I_AD_to_ADDR_B], // Read Arg
+      [.I_AND, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // And to A, Next OP
     ],
     [ // 2e ROL Abs
       []
