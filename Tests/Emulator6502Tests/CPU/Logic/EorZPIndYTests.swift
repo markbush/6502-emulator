@@ -48,9 +48,9 @@ final class EorZpIndYTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(pins.data.value, testValue2)
 
-    // Add arg to A
+    // Ex OR arg to A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 &+ testValue2)
+    XCTAssertEqual(cpu.a.value, testValue1 ^ testValue2)
 
     // Decode NOP
     TestHelper.cycle(cpu, pins: pins, mem: memory)
@@ -108,9 +108,9 @@ final class EorZpIndYTests: XCTestCase {
     XCTAssertEqual(pins.address.value, UInt16(0x2402))
     XCTAssertEqual(pins.data.value, testValue2)
 
-    // Add arg to A
+    // Ex OR arg to A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 &+ testValue2)
+    XCTAssertEqual(cpu.a.value, testValue1 ^ testValue2)
 
     // Decode NOP
     TestHelper.cycle(cpu, pins: pins, mem: memory)
