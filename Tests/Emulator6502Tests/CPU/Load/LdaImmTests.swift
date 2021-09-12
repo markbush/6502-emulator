@@ -67,7 +67,7 @@ final class LdaImmTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.LDAImm)
 
-    // lead arg to A
+    // Load arg to A
     // Zero should be set, negative clear
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.a.value, 0)
