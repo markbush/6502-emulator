@@ -331,7 +331,12 @@ class CPU6502 : Chip {
       []
     ],
     [ // 31 AND (ZP),Y
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for IAL)
+      [.I_DATA_to_ADL, .I_AD_to_ADDR_B, .I_ADL_INCR], // Read 00,IAL (for BAL), IAL=IAL+1
+      [.I_AD_to_ADDR_B, .I_DATA_to_ADL, .I_ADL_plus_Y], // Read 00,IAL+1 (for BAH), save BAL+Y
+      [.I_DATA_to_ADH, .I_CHK_carry, .I_AD_to_ADDR_B], // Read arg - discard if carry
+      [.I_ADH_INCR, .I_AD_to_ADDR_B], // Read arg from adjusted address
+      [.I_AND, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // And to A, Next OP
     ],
     [ // 32
       []
