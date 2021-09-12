@@ -141,21 +141,21 @@ class CPU6502 : Chip {
     case .I_DATA_to_A: a.value = data.value ; checkNZ(a)
       // Arithmetic
     case .I_ADC:
-      (a.value, status.carry, status.overflow) = a.adc(data.value, carryIn: status.carry)
-      checkNZ(a)
+      (a.value, status.carry, status.overflow, status.negative, status.zero) = a.adc(data.value, carryIn: status.carry)
     case .I_SBC:
-      (a.value, status.carry, status.overflow) = a.adc(~data.value, carryIn: status.carry)
-      checkNZ(a)
+      (a.value, status.carry, status.overflow, status.negative, status.zero) = a.adc(~data.value, carryIn: status.carry)
     case .I_AND:
       (a.value, status.negative, status.zero) = a.and(data.value)
     case .I_EOR:
       (a.value, status.negative, status.zero) = a.eor(data.value)
     case .I_ORA:
       (a.value, status.negative, status.zero) = a.or(data.value)
+    case .I_CMP:
+      (_, status.carry, _, status.negative, status.zero) = a.adc(~data.value, carryIn: true)
     case .I_ADL_plus_X:
-      (adl.value, addressCarry, _) = adl.adc(x.value, carryIn: false)
+      (adl.value, addressCarry, _, _, _) = adl.adc(x.value, carryIn: false)
     case .I_ADL_plus_Y:
-      (adl.value, addressCarry, _) = adl.adc(y.value, carryIn: false)
+      (adl.value, addressCarry, _, _, _) = adl.adc(y.value, carryIn: false)
     case .I_ADL_INCR: adl.incr()
     case .I_ADH_INCR: adh.incr()
     case .I_CHK_carry:
@@ -910,7 +910,8 @@ class CPU6502 : Chip {
       []
     ],
     [ // c9 CMP Imm
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for Arg)
+      [.I_CMP, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Compare with A, Next OP
     ],
     [ // ca DEX
       []

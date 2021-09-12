@@ -18,8 +18,8 @@ final class CmpImmTests: XCTestCase {
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
     cpu.a.value = testValue1 // Set the accumulator
-    // Clear carry, set zero, negative and overflow
-    cpu.status.value = Status6502.ZERO | Status6502.NEGATIVE | Status6502.OVERFLOW
+    // Clear carry, set zero, negative
+    cpu.status.value = Status6502.ZERO | Status6502.NEGATIVE
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
     XCTAssertEqual(pins.data.value, TestHelper.CMPImm)
@@ -29,14 +29,12 @@ final class CmpImmTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.CMPImm)
 
-    // Add arg to A
-    // Flags should be clear
+    // Cmp arg to A - A unchanged
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 &+ testValue2)
-    XCTAssertFalse(cpu.status.carry)
+    XCTAssertEqual(cpu.a.value, testValue1)
+    XCTAssert(cpu.status.carry)
     XCTAssertFalse(cpu.status.zero)
     XCTAssertFalse(cpu.status.negative)
-    XCTAssertFalse(cpu.status.overflow)
 
     // Decode NOP - stack should contain A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
@@ -47,7 +45,7 @@ final class CmpImmTests: XCTestCase {
     print("debug: testCmpImmZero")
     let pins = Pins()
     let testValue1:UInt8 = 0xd3
-    let testValue2:UInt8 = 0x2d
+    let testValue2:UInt8 = 0xd3
     let memory = TestHelper.initMemory(pins)
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.CMPImm
@@ -59,7 +57,7 @@ final class CmpImmTests: XCTestCase {
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
     cpu.a.value = testValue1 // Set the accumulator
     // Clear carry, zero, set negative and overflow
-    cpu.status.value = Status6502.NEGATIVE | Status6502.OVERFLOW
+    cpu.status.value = Status6502.NEGATIVE
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
     XCTAssertEqual(pins.data.value, TestHelper.CMPImm)
@@ -69,14 +67,13 @@ final class CmpImmTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.CMPImm)
 
-    // Add arg to A
+    // Cmp arg to A - A unchanged
     // Carry, zero should be set, negative overflow clear
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, 0)
+    XCTAssertEqual(cpu.a.value, testValue1)
     XCTAssert(cpu.status.carry)
     XCTAssert(cpu.status.zero)
     XCTAssertFalse(cpu.status.negative)
-    XCTAssertFalse(cpu.status.overflow)
 
     // Decode NOP - stack should contain A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
@@ -86,8 +83,8 @@ final class CmpImmTests: XCTestCase {
   func testCmpImmNegative() {
     print("debug: testCmpImmNegative")
     let pins = Pins()
-    let testValue1:UInt8 = 0x93
-    let testValue2:UInt8 = 0x2d
+    let testValue1:UInt8 = 0x2d
+    let testValue2:UInt8 = 0x53
     let memory = TestHelper.initMemory(pins)
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.CMPImm
@@ -98,8 +95,8 @@ final class CmpImmTests: XCTestCase {
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
     cpu.a.value = testValue1 // Set the accumulator
-    // Clear carry, negative, set zero and overflow
-    cpu.status.value = Status6502.ZERO | Status6502.OVERFLOW
+    // Clear negative, set zero and carry
+    cpu.status.value = Status6502.ZERO | Status6502.CARRY
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
     XCTAssertEqual(pins.data.value, TestHelper.CMPImm)
@@ -109,92 +106,13 @@ final class CmpImmTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.CMPImm)
 
-    // Add arg to A
-    // Carry, zero should be set, negative overflow clear
+    // Cmp arg to A - A unchanged
+    // Carry, zero should be clear, negative set
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 &+ testValue2)
+    XCTAssertEqual(cpu.a.value, testValue1)
     XCTAssertFalse(cpu.status.carry)
     XCTAssertFalse(cpu.status.zero)
     XCTAssert(cpu.status.negative)
-    XCTAssertFalse(cpu.status.overflow)
-
-    // Decode NOP - stack should contain A
-    TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.ir.value, TestHelper.NOP)
-  }
-
-  func testCmpImmPositiveOverflow() {
-    print("debug: testCmpImmPositiveOverflow")
-    let pins = Pins()
-    let testValue1:UInt8 = 0x63
-    let testValue2:UInt8 = 0x3b
-    let memory = TestHelper.initMemory(pins)
-    // First OP after reset is op
-    memory[TestHelper.RES_ADDR] = TestHelper.CMPImm
-    memory[TestHelper.RES_ADDR&+1] = testValue2
-    memory[TestHelper.RES_ADDR&+2] = TestHelper.NOP
-    let cpu = CPU6502(pins)
-    cpu.reset()
-
-    TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
-    cpu.a.value = testValue1 // Set the accumulator
-    // Clear carry, set zero, clear negative and overflow
-    cpu.status.value = Status6502.ZERO
-    // Next instruction should be op at RESET address
-    XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
-    XCTAssertEqual(pins.data.value, TestHelper.CMPImm)
-
-    print("debug: perform CMP Imm")
-    // decode OP - fetch arg
-    TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.ir.value, TestHelper.CMPImm)
-
-    // Add arg to A
-    TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 &+ testValue2)
-    XCTAssertFalse(cpu.status.carry)
-    XCTAssertFalse(cpu.status.zero)
-    XCTAssert(cpu.status.negative)
-    XCTAssert(cpu.status.overflow)
-
-    // Decode NOP - stack should contain A
-    TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.ir.value, TestHelper.NOP)
-  }
-
-  func testCmpImmNegativeOverflow() {
-    print("debug: testCmpImmNegativeOverflow")
-    let pins = Pins()
-    let testValue1:UInt8 = 0xb3
-    let testValue2:UInt8 = 0x9d
-    let memory = TestHelper.initMemory(pins)
-    // First OP after reset is op
-    memory[TestHelper.RES_ADDR] = TestHelper.CMPImm
-    memory[TestHelper.RES_ADDR&+1] = testValue2
-    memory[TestHelper.RES_ADDR&+2] = TestHelper.NOP
-    let cpu = CPU6502(pins)
-    cpu.reset()
-
-    TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
-    cpu.a.value = testValue1 // Set the accumulator
-    // Clear carry, set zero, negative and clear overflow
-    cpu.status.value = Status6502.ZERO | Status6502.NEGATIVE
-    // Next instruction should be op at RESET address
-    XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
-    XCTAssertEqual(pins.data.value, TestHelper.CMPImm)
-
-    print("debug: perform CMP Imm")
-    // decode OP - fetch arg
-    TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.ir.value, TestHelper.CMPImm)
-
-    // Add arg to A
-    TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 &+ testValue2)
-    XCTAssert(cpu.status.carry)
-    XCTAssertFalse(cpu.status.zero)
-    XCTAssertFalse(cpu.status.negative)
-    XCTAssert(cpu.status.overflow)
 
     // Decode NOP - stack should contain A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
