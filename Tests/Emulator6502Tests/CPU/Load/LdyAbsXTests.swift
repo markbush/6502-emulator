@@ -23,7 +23,7 @@ final class LdyAbsXTests: XCTestCase {
     cpu.x.value = offset // Index offset from base address
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
-    cpu.a.value = testValue1 // Set the accumulator
+    cpu.y.value = testValue1 // Set Y
 
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
@@ -43,9 +43,9 @@ final class LdyAbsXTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(pins.data.value, testValue2)
 
-    // Add arg to A
+    // Load arg to Y
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 &+ testValue2)
+    XCTAssertEqual(cpu.y.value, testValue2)
 
     // Decode NOP
     TestHelper.cycle(cpu, pins: pins, mem: memory)
@@ -72,7 +72,7 @@ final class LdyAbsXTests: XCTestCase {
     cpu.x.value = offset // Index offset from base address
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
-    cpu.a.value = testValue1 // Set the accumulator
+    cpu.y.value = testValue1 // Set Y
 
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
@@ -96,9 +96,9 @@ final class LdyAbsXTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(pins.data.value, testValue2)
 
-    // Add arg to A
+    // Load arg to Y
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 &+ testValue2)
+    XCTAssertEqual(cpu.y.value, testValue2)
 
     // Decode NOP
     TestHelper.cycle(cpu, pins: pins, mem: memory)
