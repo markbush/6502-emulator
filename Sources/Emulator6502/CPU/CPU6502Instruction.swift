@@ -8,5 +8,5 @@ case I_NEXT_OP, I_PC_INCR, I_SP_INCR, I_SP_DECR, I_WRITE,
   I_CLC, I_CLD, I_CLI, I_CLV, I_SEC, I_SED, I_SEI,
   I_A_to_DATA, I_DATA_to_A, I_ADL_INCR, I_ADH_INCR,
   I_ADC, I_ADL_plus_X, I_ADL_plus_Y, I_CHK_carry,
-  I_SBC, I_AND, I_EOR
+  I_SBC, I_AND, I_EOR, I_ORA
 }
