@@ -813,7 +813,8 @@ class CPU6502 : Chip {
       []
     ],
     [ // a9 LDA Imm
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for Arg)
+      [.I_DATA_to_A, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Load A, Next OP
     ],
     [ // aa TAX
       []
