@@ -43,7 +43,7 @@ final class AndAbsXTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(pins.data.value, testValue2)
 
-    // Add arg to A
+    // And arg to A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.a.value, testValue1 & testValue2)
 
@@ -96,7 +96,7 @@ final class AndAbsXTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(pins.data.value, testValue2)
 
-    // Add arg to A
+    // And arg to A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.a.value, testValue1 & testValue2)
 

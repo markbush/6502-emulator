@@ -39,8 +39,7 @@ final class AndAbsTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(pins.data.value, testValue2)
 
-    // Add arg to A
-    // Flags should be clear
+    // And arg to A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.a.value, testValue1 & testValue2)
 
