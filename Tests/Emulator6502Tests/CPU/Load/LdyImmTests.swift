@@ -17,167 +17,8 @@ final class LdyImmTests: XCTestCase {
     cpu.reset()
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
-    cpu.a.value = testValue1 // Set the accumulator
-    // Clear carry, set zero, negative and overflow
-    cpu.status.value = Status6502.ZERO | Status6502.NEGATIVE | Status6502.OVERFLOW
-    // Next instruction should be op at RESET address
-    XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
-    XCTAssertEqual(pins.data.value, TestHelper.LDYImm)
-
-    print("debug: perform LDY Imm")
-    // decode OP - fetch arg
-    TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.ir.value, TestHelper.LDYImm)
-
-    // Add arg to A
-    // Flags should be clear
-    TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 &+ testValue2)
-    XCTAssertFalse(cpu.status.carry)
-    XCTAssertFalse(cpu.status.zero)
-    XCTAssertFalse(cpu.status.negative)
-    XCTAssertFalse(cpu.status.overflow)
-
-    // Decode NOP - stack should contain A
-    TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.ir.value, TestHelper.NOP)
-  }
-
-  func testLdyImmZero() {
-    print("debug: testLdyImmZero")
-    let pins = Pins()
-    let testValue1:UInt8 = 0xd3
-    let testValue2:UInt8 = 0x2d
-    let memory = TestHelper.initMemory(pins)
-    // First OP after reset is op
-    memory[TestHelper.RES_ADDR] = TestHelper.LDYImm
-    memory[TestHelper.RES_ADDR&+1] = testValue2
-    memory[TestHelper.RES_ADDR&+2] = TestHelper.NOP
-    let cpu = CPU6502(pins)
-    cpu.reset()
-
-    TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
-    cpu.a.value = testValue1 // Set the accumulator
-    // Clear carry, zero, set negative and overflow
-    cpu.status.value = Status6502.NEGATIVE | Status6502.OVERFLOW
-    // Next instruction should be op at RESET address
-    XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
-    XCTAssertEqual(pins.data.value, TestHelper.LDYImm)
-
-    print("debug: perform LDY Imm")
-    // decode OP - fetch arg
-    TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.ir.value, TestHelper.LDYImm)
-
-    // Add arg to A
-    // Carry, zero should be set, negative overflow clear
-    TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, 0)
-    XCTAssert(cpu.status.carry)
-    XCTAssert(cpu.status.zero)
-    XCTAssertFalse(cpu.status.negative)
-    XCTAssertFalse(cpu.status.overflow)
-
-    // Decode NOP - stack should contain A
-    TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.ir.value, TestHelper.NOP)
-  }
-
-  func testLdyImmNegative() {
-    print("debug: testLdyImmNegative")
-    let pins = Pins()
-    let testValue1:UInt8 = 0x93
-    let testValue2:UInt8 = 0x2d
-    let memory = TestHelper.initMemory(pins)
-    // First OP after reset is op
-    memory[TestHelper.RES_ADDR] = TestHelper.LDYImm
-    memory[TestHelper.RES_ADDR&+1] = testValue2
-    memory[TestHelper.RES_ADDR&+2] = TestHelper.NOP
-    let cpu = CPU6502(pins)
-    cpu.reset()
-
-    TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
-    cpu.a.value = testValue1 // Set the accumulator
-    // Clear carry, negative, set zero and overflow
-    cpu.status.value = Status6502.ZERO | Status6502.OVERFLOW
-    // Next instruction should be op at RESET address
-    XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
-    XCTAssertEqual(pins.data.value, TestHelper.LDYImm)
-
-    print("debug: perform LDY Imm")
-    // decode OP - fetch arg
-    TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.ir.value, TestHelper.LDYImm)
-
-    // Add arg to A
-    // Carry, zero should be set, negative overflow clear
-    TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 &+ testValue2)
-    XCTAssertFalse(cpu.status.carry)
-    XCTAssertFalse(cpu.status.zero)
-    XCTAssert(cpu.status.negative)
-    XCTAssertFalse(cpu.status.overflow)
-
-    // Decode NOP - stack should contain A
-    TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.ir.value, TestHelper.NOP)
-  }
-
-  func testLdyImmPositiveOverflow() {
-    print("debug: testLdyImmPositiveOverflow")
-    let pins = Pins()
-    let testValue1:UInt8 = 0x63
-    let testValue2:UInt8 = 0x3b
-    let memory = TestHelper.initMemory(pins)
-    // First OP after reset is op
-    memory[TestHelper.RES_ADDR] = TestHelper.LDYImm
-    memory[TestHelper.RES_ADDR&+1] = testValue2
-    memory[TestHelper.RES_ADDR&+2] = TestHelper.NOP
-    let cpu = CPU6502(pins)
-    cpu.reset()
-
-    TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
-    cpu.a.value = testValue1 // Set the accumulator
-    // Clear carry, set zero, clear negative and overflow
-    cpu.status.value = Status6502.ZERO
-    // Next instruction should be op at RESET address
-    XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
-    XCTAssertEqual(pins.data.value, TestHelper.LDYImm)
-
-    print("debug: perform LDY Imm")
-    // decode OP - fetch arg
-    TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.ir.value, TestHelper.LDYImm)
-
-    // Add arg to A
-    TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 &+ testValue2)
-    XCTAssertFalse(cpu.status.carry)
-    XCTAssertFalse(cpu.status.zero)
-    XCTAssert(cpu.status.negative)
-    XCTAssert(cpu.status.overflow)
-
-    // Decode NOP - stack should contain A
-    TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.ir.value, TestHelper.NOP)
-  }
-
-  func testLdyImmNegativeOverflow() {
-    print("debug: testLdyImmNegativeOverflow")
-    let pins = Pins()
-    let testValue1:UInt8 = 0xb3
-    let testValue2:UInt8 = 0x9d
-    let memory = TestHelper.initMemory(pins)
-    // First OP after reset is op
-    memory[TestHelper.RES_ADDR] = TestHelper.LDYImm
-    memory[TestHelper.RES_ADDR&+1] = testValue2
-    memory[TestHelper.RES_ADDR&+2] = TestHelper.NOP
-    let cpu = CPU6502(pins)
-    cpu.reset()
-
-    TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
-    cpu.a.value = testValue1 // Set the accumulator
-    // Clear carry, set zero, negative and clear overflow
+    cpu.y.value = testValue1 // Set Y
+    // Set zero, negative
     cpu.status.value = Status6502.ZERO | Status6502.NEGATIVE
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
@@ -188,13 +29,88 @@ final class LdyImmTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.LDYImm)
 
-    // Add arg to A
+    // Load arg to Y
+    // Flags should be clear
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 &+ testValue2)
-    XCTAssert(cpu.status.carry)
+    XCTAssertEqual(cpu.y.value, testValue2)
     XCTAssertFalse(cpu.status.zero)
     XCTAssertFalse(cpu.status.negative)
-    XCTAssert(cpu.status.overflow)
+
+    // Decode NOP - stack should contain A
+    TestHelper.cycle(cpu, pins: pins, mem: memory)
+    XCTAssertEqual(cpu.ir.value, TestHelper.NOP)
+  }
+
+  func testLdyImmZero() {
+    print("debug: testLdyImmZero")
+    let pins = Pins()
+    let testValue1:UInt8 = 0xd3
+    let testValue2:UInt8 = 0x00
+    let memory = TestHelper.initMemory(pins)
+    // First OP after reset is op
+    memory[TestHelper.RES_ADDR] = TestHelper.LDYImm
+    memory[TestHelper.RES_ADDR&+1] = testValue2
+    memory[TestHelper.RES_ADDR&+2] = TestHelper.NOP
+    let cpu = CPU6502(pins)
+    cpu.reset()
+
+    TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
+    cpu.y.value = testValue1 // Set Y
+    // Clear zero, set negative
+    cpu.status.value = Status6502.NEGATIVE
+    // Next instruction should be op at RESET address
+    XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
+    XCTAssertEqual(pins.data.value, TestHelper.LDYImm)
+
+    print("debug: perform LDY Imm")
+    // decode OP - fetch arg
+    TestHelper.cycle(cpu, pins: pins, mem: memory)
+    XCTAssertEqual(cpu.ir.value, TestHelper.LDYImm)
+
+    // Load arg to Y
+    // Zero should be set, negative clear
+    TestHelper.cycle(cpu, pins: pins, mem: memory)
+    XCTAssertEqual(cpu.y.value, 0)
+    XCTAssert(cpu.status.zero)
+    XCTAssertFalse(cpu.status.negative)
+
+    // Decode NOP - stack should contain A
+    TestHelper.cycle(cpu, pins: pins, mem: memory)
+    XCTAssertEqual(cpu.ir.value, TestHelper.NOP)
+  }
+
+  func testLdyImmNegative() {
+    print("debug: testLdyImmNegative")
+    let pins = Pins()
+    let testValue1:UInt8 = 0x2d
+    let testValue2:UInt8 = 0x95
+    let memory = TestHelper.initMemory(pins)
+    // First OP after reset is op
+    memory[TestHelper.RES_ADDR] = TestHelper.LDYImm
+    memory[TestHelper.RES_ADDR&+1] = testValue2
+    memory[TestHelper.RES_ADDR&+2] = TestHelper.NOP
+    let cpu = CPU6502(pins)
+    cpu.reset()
+
+    TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
+    cpu.y.value = testValue1 // Set Y
+    // Clear negative, set zero
+    cpu.status.value = Status6502.ZERO
+    // Next instruction should be op at RESET address
+    XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
+    XCTAssertEqual(pins.data.value, TestHelper.LDYImm)
+
+    print("debug: perform LDY Imm")
+    // decode OP - fetch arg
+    TestHelper.cycle(cpu, pins: pins, mem: memory)
+    XCTAssertEqual(cpu.ir.value, TestHelper.LDYImm)
+
+    // Load arg to Y
+    // Zero should be clear, negative set
+    TestHelper.cycle(cpu, pins: pins, mem: memory)
+    XCTAssertEqual(cpu.y.value, testValue2)
+    XCTAssertFalse(cpu.status.zero)
+    XCTAssert(cpu.status.negative)
 
     // Decode NOP - stack should contain A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
