@@ -18,8 +18,8 @@ final class SbcImmTests: XCTestCase {
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
     cpu.a.value = testValue1 // Set the accumulator
-    // Clear carry, set zero, negative and overflow
-    cpu.status.value = Status6502.ZERO | Status6502.NEGATIVE | Status6502.OVERFLOW
+    // Set carry, zero, negative and overflow
+    cpu.status.value = Status6502.CARRY | Status6502.ZERO | Status6502.NEGATIVE | Status6502.OVERFLOW
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
     XCTAssertEqual(pins.data.value, TestHelper.SBCImm)
@@ -33,7 +33,7 @@ final class SbcImmTests: XCTestCase {
     // Flags should be clear
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.a.value, testValue1 &- testValue2)
-    XCTAssertFalse(cpu.status.carry)
+    XCTAssert(cpu.status.carry)
     XCTAssertFalse(cpu.status.zero)
     XCTAssertFalse(cpu.status.negative)
     XCTAssertFalse(cpu.status.overflow)
@@ -47,7 +47,7 @@ final class SbcImmTests: XCTestCase {
     print("debug: testSbcImmZero")
     let pins = Pins()
     let testValue1:UInt8 = 0xd3
-    let testValue2:UInt8 = 0x2d
+    let testValue2:UInt8 = 0xd3
     let memory = TestHelper.initMemory(pins)
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.SBCImm
@@ -58,8 +58,8 @@ final class SbcImmTests: XCTestCase {
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
     cpu.a.value = testValue1 // Set the accumulator
-    // Clear carry, zero, set negative and overflow
-    cpu.status.value = Status6502.NEGATIVE | Status6502.OVERFLOW
+    // Clear zero, set carry, negative and overflow
+    cpu.status.value = Status6502.CARRY | Status6502.NEGATIVE | Status6502.OVERFLOW
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
     XCTAssertEqual(pins.data.value, TestHelper.SBCImm)
@@ -86,8 +86,8 @@ final class SbcImmTests: XCTestCase {
   func testSbcImmNegative() {
     print("debug: testSbcImmNegative")
     let pins = Pins()
-    let testValue1:UInt8 = 0x93
-    let testValue2:UInt8 = 0x2d
+    let testValue1:UInt8 = 0x2d
+    let testValue2:UInt8 = 0x53
     let memory = TestHelper.initMemory(pins)
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.SBCImm
@@ -98,8 +98,8 @@ final class SbcImmTests: XCTestCase {
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
     cpu.a.value = testValue1 // Set the accumulator
-    // Clear carry, negative, set zero and overflow
-    cpu.status.value = Status6502.ZERO | Status6502.OVERFLOW
+    // Clear negative, set carry, zero and overflow
+    cpu.status.value = Status6502.CARRY | Status6502.ZERO | Status6502.OVERFLOW
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
     XCTAssertEqual(pins.data.value, TestHelper.SBCImm)
@@ -127,7 +127,7 @@ final class SbcImmTests: XCTestCase {
     print("debug: testSbcImmPositiveOverflow")
     let pins = Pins()
     let testValue1:UInt8 = 0x63
-    let testValue2:UInt8 = 0x3b
+    let testValue2:UInt8 = 0xc5
     let memory = TestHelper.initMemory(pins)
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.SBCImm
@@ -138,8 +138,8 @@ final class SbcImmTests: XCTestCase {
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
     cpu.a.value = testValue1 // Set the accumulator
-    // Clear carry, set zero, clear negative and overflow
-    cpu.status.value = Status6502.ZERO
+    // Set carry, zero, clear negative and overflow
+    cpu.status.value = Status6502.CARRY | Status6502.ZERO
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
     XCTAssertEqual(pins.data.value, TestHelper.SBCImm)
@@ -166,7 +166,7 @@ final class SbcImmTests: XCTestCase {
     print("debug: testSbcImmNegativeOverflow")
     let pins = Pins()
     let testValue1:UInt8 = 0xb3
-    let testValue2:UInt8 = 0x9d
+    let testValue2:UInt8 = 0x6d
     let memory = TestHelper.initMemory(pins)
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.SBCImm
@@ -177,8 +177,8 @@ final class SbcImmTests: XCTestCase {
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
     cpu.a.value = testValue1 // Set the accumulator
-    // Clear carry, set zero, negative and clear overflow
-    cpu.status.value = Status6502.ZERO | Status6502.NEGATIVE
+    // Set carry, zero, negative and clear overflow
+    cpu.status.value = Status6502.CARRY | Status6502.ZERO | Status6502.NEGATIVE
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
     XCTAssertEqual(pins.data.value, TestHelper.SBCImm)

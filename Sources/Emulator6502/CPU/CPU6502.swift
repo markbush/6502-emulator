@@ -920,7 +920,8 @@ class CPU6502 : Chip {
       []
     ],
     [ // e9 SBC Imm
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for Arg)
+      [.I_SBC, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Subtract from A, Next OP
     ],
     [ // ea NOP
       [.I_PC_to_ADDR_B], // Arg - discard, suppress PC incr
