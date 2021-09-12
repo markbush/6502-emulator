@@ -17,7 +17,7 @@ final class LdxImmTests: XCTestCase {
     cpu.reset()
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
-    cpu.x.value = testValue1 // Set the accumulator
+    cpu.x.value = testValue1 // Set X
     // Set zero, negative
     cpu.status.value = Status6502.ZERO | Status6502.NEGATIVE
     // Next instruction should be op at RESET address
@@ -55,7 +55,7 @@ final class LdxImmTests: XCTestCase {
     cpu.reset()
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
-    cpu.x.value = testValue1 // Set the accumulator
+    cpu.x.value = testValue1 // Set X
     // Clear zero, set negative
     cpu.status.value = Status6502.NEGATIVE
     // Next instruction should be op at RESET address
@@ -93,7 +93,7 @@ final class LdxImmTests: XCTestCase {
     cpu.reset()
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
-    cpu.x.value = testValue1 // Set the accumulator
+    cpu.x.value = testValue1 // Set X
     // Clear negative, set zero
     cpu.status.value = Status6502.ZERO
     // Next instruction should be op at RESET address

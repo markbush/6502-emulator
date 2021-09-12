@@ -20,7 +20,7 @@ final class LdxAbsTests: XCTestCase {
     cpu.reset()
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
-    cpu.x.value = testValue1 // Set the accumulator
+    cpu.x.value = testValue1 // Set X
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
     XCTAssertEqual(pins.data.value, TestHelper.LDXAbs)
