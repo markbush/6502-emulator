@@ -146,6 +146,8 @@ class CPU6502 : Chip {
     case .I_SBC:
       (a.value, status.carry, status.overflow) = a.adc(~data.value, carryIn: status.carry)
       checkNZ(a)
+    case .I_AND:
+      (a.value, status.negative, status.zero) = a.and(data.value)
     case .I_ADL_plus_X:
       (adl.value, addressCarry, _) = adl.adc(x.value, carryIn: false)
     case .I_ADL_plus_Y:
@@ -296,7 +298,8 @@ class CPU6502 : Chip {
       [.I_DATA_to_P, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Load P, Next OP
     ],
     [ // 29 AND Imm
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for Arg)
+      [.I_AND, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // And to A, Next OP
     ],
     [ // 2a ROL
       []
