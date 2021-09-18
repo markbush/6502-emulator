@@ -663,7 +663,11 @@ class CPU6502 : Chip {
       [.I_ADC, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Add to A, Next OP
     ],
     [ // 66 ROR ZP
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
+      [.I_DATA_to_ADL, .I_AD_to_ADDR_B], // Read Arg
+      [.I_AD_to_ADDR_B, .I_WRITE], // Rotate A right
+      [.I_ROR, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
+      [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 67
       []
