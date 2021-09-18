@@ -173,7 +173,7 @@ class CPU6502 : Chip {
     case .I_ADL_plus_Y:
       (adl.value, addressCarry, _, _, _) = adl.adc(y.value, carryIn: false)
     case .I_ADL_INCR: adl.incr()
-    case .I_ADH_INCR: adh.incr()
+    case .I_ADH_INCR: (adh.value, _, _, _, _) = adh.adc(0, carryIn: addressCarry) //adh.incr()
     case .I_CHK_carry:
       if (!addressCarry) {
         instructionCycle += 1
@@ -324,7 +324,13 @@ class CPU6502 : Chip {
       [.I_ORA, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Or to A, Next OP
     ],
     [ // 1e ASL Abs,X
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
+      [.I_DATA_to_ADL, .I_ADL_plus_X, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH, ADL+X
+      [.I_DATA_to_ADH, .I_AD_to_ADDR_B], // Read Arg - discarded
+      [.I_ADH_INCR, .I_AD_to_ADDR_B], // Read arg from adjusted address
+      [.I_AD_to_ADDR_B, .I_WRITE], // Shift A left
+      [.I_ASL, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
+      [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 1f
       []

@@ -18,7 +18,6 @@ final class AslZpXTests: XCTestCase {
     memory[TestHelper.RES_ADDR&+2] = TestHelper.NOP
     memory[actualStore] = testValue2
     let cpu = CPU6502(pins)
-    cpu.debug = true
     cpu.reset()
     cpu.x.value = offset // Index offset from base address
 
