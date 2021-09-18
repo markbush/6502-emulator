@@ -1,6 +1,8 @@
 import Foundation
 
 class CPU6502 : Chip {
+  var debug = false
+
   let a = Register8()
   let x = Register8()
   let y = Register8()
@@ -43,7 +45,9 @@ class CPU6502 : Chip {
     if pins.read.isLow() { // Write cycle
       pins.data.value = data.value
     }
-    logStatus()
+    if debug {
+      logStatus()
+    }
     instructionCycle += 1
     if pins.sync.isHigh() && (interruptType == .reset) {
       interruptType = .brk
@@ -60,7 +64,9 @@ class CPU6502 : Chip {
     pins.sync.clear() // Not fetching an operation during reset
     perform(.I_PC_to_ADDR_B)
     perform(.I_PC_INCR)
-    logStatus()
+    if debug {
+      logStatus()
+    }
   }
 
   func nextOp() {
@@ -180,7 +186,7 @@ class CPU6502 : Chip {
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Arg - discard
       [.I_SP_to_ADDR_B, .I_PCH_to_DATA, .I_WRITE, .I_SP_DECR], // Push PCH
       [.I_SP_to_ADDR_B, .I_PCL_to_DATA, .I_WRITE, .I_SP_DECR], // Push PCL
-      [.I_SP_to_ADDR_B, .I_P_to_DATA,   .I_WRITE, .I_SP_DECR], // Push P
+      [.I_SP_to_ADDR_B, .I_P_to_DATA, .I_WRITE, .I_SP_DECR], // Push P
       [.I_BRK_SEI, .I_INTL_to_ADDR_B], // Disable interrupts (IRQ/BRK only), low byte of interrupt vector
       [.I_DATA_to_PCL, .I_INTH_to_ADDR_B], // Load PCL, high byte of interrupt vector
       [.I_DATA_to_PCH, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR], // Load PCH, Next OP
@@ -208,14 +214,18 @@ class CPU6502 : Chip {
       [.I_ORA, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Or to A, Next OP
     ],
     [ // 06 ASL ZP
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
+      [.I_DATA_to_ADL, .I_AD_to_ADDR_B], // Read Arg
+      [.I_ASL, .I_AD_to_ADDR_B, .I_WRITE], // Shift A left
+      [.I_AD_to_ADDR_B, .I_WRITE], // Write correct value
+      [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 07
       []
     ],
     [ // 08 PHP
       [.I_PC_to_ADDR_B], // Arg - discard, suppress PC incr
-      [.I_SP_to_ADDR_B, .I_P_to_DATA,   .I_WRITE, .I_SP_DECR], // Write P to stack
+      [.I_SP_to_ADDR_B, .I_P_to_DATA, .I_WRITE, .I_SP_DECR], // Write P to stack
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 09 ORA Imm
@@ -239,7 +249,12 @@ class CPU6502 : Chip {
       [.I_ORA, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Or to A, Next OP
     ],
     [ // 0e ASL Abs
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
+      [.I_DATA_to_ADL, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH
+      [.I_DATA_to_ADH, .I_AD_to_ADDR_B], // Read Arg
+      [.I_ASL, .I_AD_to_ADDR_B, .I_WRITE], // Shift A left
+      [.I_AD_to_ADDR_B, .I_WRITE], // Write correct value
+      [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 0f
       []
@@ -474,7 +489,7 @@ class CPU6502 : Chip {
     ],
     [ // 48 PHA
       [.I_PC_to_ADDR_B], // Arg - discard, suppress PC incr
-      [.I_SP_to_ADDR_B, .I_A_to_DATA,   .I_WRITE, .I_SP_DECR], // Write A to stack
+      [.I_SP_to_ADDR_B, .I_A_to_DATA, .I_WRITE, .I_SP_DECR], // Write A to stack
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 49 EOR Imm
