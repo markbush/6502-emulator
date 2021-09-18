@@ -216,8 +216,8 @@ class CPU6502 : Chip {
     [ // 06 ASL ZP
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
       [.I_DATA_to_ADL, .I_AD_to_ADDR_B], // Read Arg
-      [.I_ASL, .I_AD_to_ADDR_B, .I_WRITE], // Shift A left
-      [.I_AD_to_ADDR_B, .I_WRITE], // Write correct value
+      [.I_AD_to_ADDR_B, .I_WRITE], // Shift A left
+      [.I_ASL, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 07
@@ -252,8 +252,8 @@ class CPU6502 : Chip {
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
       [.I_DATA_to_ADL, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH
       [.I_DATA_to_ADH, .I_AD_to_ADDR_B], // Read Arg
-      [.I_ASL, .I_AD_to_ADDR_B, .I_WRITE], // Shift A left
-      [.I_AD_to_ADDR_B, .I_WRITE], // Write correct value
+      [.I_AD_to_ADDR_B, .I_WRITE], // Shift A left
+      [.I_ASL, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 0f
@@ -286,7 +286,12 @@ class CPU6502 : Chip {
       [.I_ORA, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Or to A, Next OP
     ],
     [ // 16 ASL ZP,X
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
+      [.I_DATA_to_ADL, .I_AD_to_ADDR_B, .I_ADL_plus_X], // Read arg, ADL+X
+      [.I_AD_to_ADDR_B], // Read arg from adjusted address
+      [.I_AD_to_ADDR_B, .I_WRITE], // Shift A left
+      [.I_ASL, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
+      [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 17
       []
@@ -1247,7 +1252,7 @@ class CPU6502 : Chip {
     "SED", "SBC abs,Y", "???", "???", "???", "SBC abs,X", "INC abs,X", "???"
   ]
   func logStatus() {
-    print(String(format:"debug: %04x %02x %@ IR: %02x P: %02x %d %@ A: %02x %@",
+    print(String(format:"debug: %04x %02x %@ IR: %02x P: %02x %d %@ A: %02x X: %02x Y: %02x %@",
       pins.address.value,
       pins.data.value,
       (pins.read.isHigh() ? "R" : "W"),
@@ -1256,6 +1261,8 @@ class CPU6502 : Chip {
       instructionCycle,
       (pins.sync.isHigh() ? "H" : "L"),
       a.value,
+      x.value,
+      y.value,
       CPU6502.Instructions[Int(ir.value)]))
   }
 }
