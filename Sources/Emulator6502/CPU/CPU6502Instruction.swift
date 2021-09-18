@@ -9,5 +9,6 @@ case I_NEXT_OP, I_PC_INCR, I_SP_INCR, I_SP_DECR, I_WRITE,
   I_A_to_DATA, I_DATA_to_A, I_ADL_INCR, I_ADH_INCR,
   I_ADC, I_ADL_plus_X, I_ADL_plus_Y, I_CHK_carry,
   I_SBC, I_AND, I_EOR, I_ORA, I_CMP,
-  I_DATA_to_X, I_DATA_to_Y
+  I_DATA_to_X, I_DATA_to_Y,
+  I_ASL, I_LSR, I_ROL, I_ROR
 }

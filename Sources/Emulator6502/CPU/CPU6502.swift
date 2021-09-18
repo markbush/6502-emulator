@@ -154,6 +154,14 @@ class CPU6502 : Chip {
       (a.value, status.negative, status.zero) = a.or(data.value)
     case .I_CMP:
       (_, status.carry, _, status.negative, status.zero) = a.adc(~data.value, carryIn: true)
+    case .I_ASL:
+      (data.value, status.carry, status.negative, status.zero) = data.shiftLeft()
+    case .I_LSR:
+      status.carry = false
+    case .I_ROL:
+      status.carry = false
+    case .I_ROR:
+      status.carry = false
     case .I_ADL_plus_X:
       (adl.value, addressCarry, _, _, _) = adl.adc(x.value, carryIn: false)
     case .I_ADL_plus_Y:
@@ -215,7 +223,8 @@ class CPU6502 : Chip {
       [.I_ORA, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Or to A, Next OP
     ],
     [ // 0a ASL
-      []
+      [.I_PC_to_ADDR_B], // Arg - discard, suppress PC incr
+      [.I_A_to_DATA, .I_ASL, .I_DATA_to_A, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Shift A left, Next OP
     ],
     [ // 0b
       []
@@ -1188,8 +1197,42 @@ class CPU6502 : Chip {
     ],
   ]
 
+  static let Instructions:[String] = [
+    "BRK", "ORA (zp,X)", "???", "???", "???", "ORA zp", "ASL zp", "???",
+    "PHP", "ORA #", "ASL", "???", "???", "ORA abs", "ASL abs", "???",
+    "BPL", "ORA (zp),Y", "???", "???", "???", "ORA zp,X", "ASL zp,X", "???",
+    "CLC", "ORA abs,Y", "???", "???", "???", "ORA abs,X", "ASL abs,X", "???",
+    "JSR", "AND (zp,X)", "???", "???", "BIT zp", "AND zp", "ROL zp", "???",
+    "PLP", "AND #", "ROL", "???", "BIT abs", "AND abs", "ROL abs", "???",
+    "BMI", "AND (zp),Y", "???", "???", "???", "AND zp,X", "ROL zp,X", "???",
+    "SEC", "AND abs,Y", "???", "???", "???", "AND abs,X", "ROL abs,X", "???",
+    "RTI", "EOR (zp,X)", "???", "???", "???", "EOR zp", "LSR zp", "???",
+    "PHA", "EOR #", "LSR", "???", "JMP abs", "EOR abs", "LSR abs", "???",
+    "BVC", "EOR (zp),Y", "???", "???", "???", "EOR zp,X", "LSR zp,X", "???",
+    "CLI", "EOR abs,Y", "???", "???", "???", "EOR abs,X", "LSR abs,X", "???",
+    "RTS", "ADC (zp,X)", "???", "???", "???", "ADC zp", "ROR zp", "???",
+    "PLA", "ADC #", "ROR", "???", "JMP (abs)", "ADC abs", "ROR abs", "???",
+    "BVS", "ADC (zp),Y", "???", "???", "???", "ADC zp,X", "ROR zp,X", "???",
+    "SEI", "ADC abs,Y", "???", "???", "???", "ADC abs,X", "ROR abs,X", "???",
+    "???", "STA (zp,X)", "???", "???", "STY zp", "STA zp", "STX zp", "???",
+    "DEY", "???", "TXA", "???", "STY abs", "STA abs", "STX abs", "???",
+    "BCC", "STA (zp),Y", "???", "???", "STY zp,X", "STA zp,X", "STX zp,Y", "???",
+    "TYA", "STA abs,Y", "TXS", "???", "???", "STA abs,X", "???", "???",
+    "LDY #", "LDA (zp,X)", "LDX #", "???", "LDY zp", "LDA zp", "LDX zp", "???",
+    "TAY", "LDA #", "TAX", "???", "LDY abs", "LDA abs", "LDX abs", "???",
+    "BCS", "LDA (zp),Y", "???", "???", "LDY zp,X", "LDA zp,X", "LDX zp,Y", "???",
+    "CLV", "LDA abs,Y", "TSX", "???", "LDY abs,X", "LDA abs,X", "LDX abs,Y", "???",
+    "CPY #", "CMP (zp,X)", "???", "???", "CPY zp", "CMP zp", "DEC zp", "???",
+    "INY", "CMP #", "DEX", "???", "CPY abs", "CMP abs", "DEC abs", "???",
+    "BNE", "CMP (zp),Y", "???", "???", "???", "CMP zp,X", "DEC zp,X", "???",
+    "CLD", "CMP abs,Y", "???", "???", "???", "CMP abs,X", "DEC abs,X", "???",
+    "CPX #", "SBC (zp,X)", "???", "???", "CPX zp", "SBC zp", "INC zp", "???",
+    "INX", "SBC #", "NOP", "???", "CPX abs", "SBC abs", "INC abs", "???",
+    "BEQ", "SBC (zp),Y", "???", "???", "???", "SBC zp,X", "INC zp,X", "???",
+    "SED", "SBC abs,Y", "???", "???", "???", "SBC abs,X", "INC abs,X", "???"
+  ]
   func logStatus() {
-    print(String(format:"debug: %04x %02x %@ IR: %02x P: %02x %d %@ A: %02x",
+    print(String(format:"debug: %04x %02x %@ IR: %02x P: %02x %d %@ A: %02x %@",
       pins.address.value,
       pins.data.value,
       (pins.read.isHigh() ? "R" : "W"),
@@ -1197,6 +1240,7 @@ class CPU6502 : Chip {
       status.value,
       instructionCycle,
       (pins.sync.isHigh() ? "H" : "L"),
-      a.value))
+      a.value,
+      CPU6502.Instructions[Int(ir.value)]))
   }
 }

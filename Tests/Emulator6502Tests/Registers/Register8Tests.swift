@@ -13,8 +13,8 @@ final class Register8Tests: XCTestCase {
       let r = Register8()
 
       r.value = 0x24
-      let carryOut = r.shiftLeft()
-      XCTAssertEqual(r.value, 0x48)
+      let (newValue, carryOut, _, _) = r.shiftLeft()
+      XCTAssertEqual(newValue, 0x48)
       XCTAssertEqual(carryOut, false)
     }
 
@@ -22,8 +22,8 @@ final class Register8Tests: XCTestCase {
       let r = Register8()
 
       r.value = 0xd9
-      let carryOut = r.shiftLeft()
-      XCTAssertEqual(r.value, 0xb2)
+      let (newValue, carryOut, _, _) = r.shiftLeft()
+      XCTAssertEqual(newValue, 0xb2)
       XCTAssertEqual(carryOut, true)
     }
 
@@ -31,8 +31,8 @@ final class Register8Tests: XCTestCase {
       let r = Register8()
 
       r.value = 0x24
-      let carryOut = r.shiftRight()
-      XCTAssertEqual(r.value, 0x12)
+      let (newValue, carryOut, _, _) = r.shiftRight()
+      XCTAssertEqual(newValue, 0x12)
       XCTAssertEqual(carryOut, false)
     }
 
@@ -40,8 +40,8 @@ final class Register8Tests: XCTestCase {
       let r = Register8()
 
       r.value = 0xd9
-      let carryOut = r.shiftRight()
-      XCTAssertEqual(r.value, 0x6c)
+      let (newValue, carryOut, _, _) = r.shiftRight()
+      XCTAssertEqual(newValue, 0x6c)
       XCTAssertEqual(carryOut, true)
     }
 
@@ -49,8 +49,8 @@ final class Register8Tests: XCTestCase {
       let r = Register8()
 
       r.value = 0x24
-      let carryOut = r.rotateLeft(carryIn: false)
-      XCTAssertEqual(r.value, 0x48)
+      let (newValue, carryOut, _, _) = r.rotateLeft(carryIn: false)
+      XCTAssertEqual(newValue, 0x48)
       XCTAssertEqual(carryOut, false)
     }
 
@@ -58,8 +58,8 @@ final class Register8Tests: XCTestCase {
       let r = Register8()
 
       r.value = 0x24
-      let carryOut = r.rotateLeft(carryIn: true)
-      XCTAssertEqual(r.value, 0x49)
+      let (newValue, carryOut, _, _) = r.rotateLeft(carryIn: true)
+      XCTAssertEqual(newValue, 0x49)
       XCTAssertEqual(carryOut, false)
     }
 
@@ -67,8 +67,8 @@ final class Register8Tests: XCTestCase {
       let r = Register8()
 
       r.value = 0xd9
-      let carryOut = r.rotateLeft(carryIn: false)
-      XCTAssertEqual(r.value, 0xb2)
+      let (newValue, carryOut, _, _) = r.rotateLeft(carryIn: false)
+      XCTAssertEqual(newValue, 0xb2)
       XCTAssertEqual(carryOut, true)
     }
 
@@ -76,8 +76,8 @@ final class Register8Tests: XCTestCase {
       let r = Register8()
 
       r.value = 0xd9
-      let carryOut = r.rotateLeft(carryIn: true)
-      XCTAssertEqual(r.value, 0xb3)
+      let (newValue, carryOut, _, _) = r.rotateLeft(carryIn: true)
+      XCTAssertEqual(newValue, 0xb3)
       XCTAssertEqual(carryOut, true)
     }
 
@@ -85,8 +85,8 @@ final class Register8Tests: XCTestCase {
       let r = Register8()
 
       r.value = 0x24
-      let carryOut = r.rotateRight(carryIn: false)
-      XCTAssertEqual(r.value, 0x12)
+      let (newValue, carryOut, _, _) = r.rotateRight(carryIn: false)
+      XCTAssertEqual(newValue, 0x12)
       XCTAssertEqual(carryOut, false)
     }
 
@@ -94,8 +94,8 @@ final class Register8Tests: XCTestCase {
       let r = Register8()
 
       r.value = 0x24
-      let carryOut = r.rotateRight(carryIn: true)
-      XCTAssertEqual(r.value, 0x92)
+      let (newValue, carryOut, _, _) = r.rotateRight(carryIn: true)
+      XCTAssertEqual(newValue, 0x92)
       XCTAssertEqual(carryOut, false)
     }
 
@@ -103,8 +103,8 @@ final class Register8Tests: XCTestCase {
       let r = Register8()
 
       r.value = 0xd9
-      let carryOut = r.rotateRight(carryIn: false)
-      XCTAssertEqual(r.value, 0x6c)
+      let (newValue, carryOut, _, _) = r.rotateRight(carryIn: false)
+      XCTAssertEqual(newValue, 0x6c)
       XCTAssertEqual(carryOut, true)
     }
 
@@ -112,8 +112,8 @@ final class Register8Tests: XCTestCase {
       let r = Register8()
 
       r.value = 0xd9
-      let carryOut = r.rotateRight(carryIn: true)
-      XCTAssertEqual(r.value, 0xec)
+      let (newValue, carryOut, _, _) = r.rotateRight(carryIn: true)
+      XCTAssertEqual(newValue, 0xec)
       XCTAssertEqual(carryOut, true)
     }
 
