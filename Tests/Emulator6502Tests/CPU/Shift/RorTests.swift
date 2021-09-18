@@ -2,51 +2,14 @@ import XCTest
 import Foundation
 @testable import Emulator6502
 
-final class AslTests: XCTestCase {
-  func testAslNoCarry() {
-    print("debug: testAslNoCarry")
+final class RorTests: XCTestCase {
+  func testRorNoCarry() {
+    print("debug: testRorNoCarry")
     let pins = Pins()
     let testValue1:UInt8 = 0x26
     let memory = TestHelper.initMemory(pins)
     // First OP after reset is op
-    memory[TestHelper.RES_ADDR] = TestHelper.ASL
-    memory[TestHelper.RES_ADDR&+1] = TestHelper.NOP
-    let cpu = CPU6502(pins)
-    cpu.reset()
-
-    TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
-    cpu.a.value = testValue1 // Set the accumulator
-    // Set carry, zero, negative
-    cpu.status.value = Status6502.CARRY | Status6502.ZERO | Status6502.NEGATIVE
-    // Next instruction should be op at RESET address
-    XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
-    XCTAssertEqual(pins.data.value, TestHelper.ASL)
-
-    print("debug: perform ASL")
-    // decode OP
-    TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.ir.value, TestHelper.ASL)
-
-    // Shift A
-    // Flags should be clear
-    TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 << 1)
-    XCTAssertFalse(cpu.status.carry)
-    XCTAssertFalse(cpu.status.zero)
-    XCTAssertFalse(cpu.status.negative)
-
-    // Decode NOP
-    TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.ir.value, TestHelper.NOP)
-  }
-
-  func testAslWithCarry() {
-    print("debug: testAslWithCarry")
-    let pins = Pins()
-    let testValue1:UInt8 = 0x96
-    let memory = TestHelper.initMemory(pins)
-    // First OP after reset is op
-    memory[TestHelper.RES_ADDR] = TestHelper.ASL
+    memory[TestHelper.RES_ADDR] = TestHelper.ROR
     memory[TestHelper.RES_ADDR&+1] = TestHelper.NOP
     let cpu = CPU6502(pins)
     cpu.reset()
@@ -57,17 +20,18 @@ final class AslTests: XCTestCase {
     cpu.status.value = Status6502.ZERO | Status6502.NEGATIVE
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
-    XCTAssertEqual(pins.data.value, TestHelper.ASL)
+    XCTAssertEqual(pins.data.value, TestHelper.ROR)
 
-    print("debug: perform ASL")
+    print("debug: perform ROR")
     // decode OP
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.ir.value, TestHelper.ASL)
+    XCTAssertEqual(cpu.ir.value, TestHelper.ROR)
 
-    // Shift A
+    // Rotate A
+    // Flags should be clear
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 << 1)
-    XCTAssert(cpu.status.carry)
+    XCTAssertEqual(cpu.a.value, testValue1 >> 1)
+    XCTAssertFalse(cpu.status.carry)
     XCTAssertFalse(cpu.status.zero)
     XCTAssertFalse(cpu.status.negative)
 
@@ -76,13 +40,49 @@ final class AslTests: XCTestCase {
     XCTAssertEqual(cpu.ir.value, TestHelper.NOP)
   }
 
-  func testAslWithNegative() {
-    print("debug: testAslWithNegative")
+  func testRorWithCarry() {
+    print("debug: testRorWithCarry")
     let pins = Pins()
-    let testValue1:UInt8 = 0x66
+    let testValue1:UInt8 = 0x27
     let memory = TestHelper.initMemory(pins)
     // First OP after reset is op
-    memory[TestHelper.RES_ADDR] = TestHelper.ASL
+    memory[TestHelper.RES_ADDR] = TestHelper.ROR
+    memory[TestHelper.RES_ADDR&+1] = TestHelper.NOP
+    let cpu = CPU6502(pins)
+    cpu.reset()
+
+    TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
+    cpu.a.value = testValue1 // Set the accumulator
+    // Set carry, zero, clear negative
+    cpu.status.value = Status6502.CARRY | Status6502.ZERO
+    // Next instruction should be op at RESET address
+    XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
+    XCTAssertEqual(pins.data.value, TestHelper.ROR)
+
+    print("debug: perform ROR")
+    // decode OP
+    TestHelper.cycle(cpu, pins: pins, mem: memory)
+    XCTAssertEqual(cpu.ir.value, TestHelper.ROR)
+
+    // Rotate A
+    TestHelper.cycle(cpu, pins: pins, mem: memory)
+    XCTAssertEqual(cpu.a.value, (testValue1 >> 1) &+ 0x80)
+    XCTAssert(cpu.status.carry)
+    XCTAssertFalse(cpu.status.zero)
+    XCTAssert(cpu.status.negative)
+
+    // Decode NOP
+    TestHelper.cycle(cpu, pins: pins, mem: memory)
+    XCTAssertEqual(cpu.ir.value, TestHelper.NOP)
+  }
+
+  func testRorWithNegative() {
+    print("debug: testRorWithNegative")
+    let pins = Pins()
+    let testValue1:UInt8 = 0x26
+    let memory = TestHelper.initMemory(pins)
+    // First OP after reset is op
+    memory[TestHelper.RES_ADDR] = TestHelper.ROR
     memory[TestHelper.RES_ADDR&+1] = TestHelper.NOP
     let cpu = CPU6502(pins)
     cpu.reset()
@@ -93,16 +93,16 @@ final class AslTests: XCTestCase {
     cpu.status.value = Status6502.ZERO | Status6502.CARRY
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
-    XCTAssertEqual(pins.data.value, TestHelper.ASL)
+    XCTAssertEqual(pins.data.value, TestHelper.ROR)
 
-    print("debug: perform ASL")
+    print("debug: perform ROR")
     // decode OP
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.ir.value, TestHelper.ASL)
+    XCTAssertEqual(cpu.ir.value, TestHelper.ROR)
 
-    // Shift A
+    // Rotate A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 << 1)
+    XCTAssertEqual(cpu.a.value, (testValue1 >> 1) &+ 0x80)
     XCTAssertFalse(cpu.status.carry)
     XCTAssertFalse(cpu.status.zero)
     XCTAssert(cpu.status.negative)
@@ -112,13 +112,13 @@ final class AslTests: XCTestCase {
     XCTAssertEqual(cpu.ir.value, TestHelper.NOP)
   }
 
-  func testAslWithZero() {
-    print("debug: testAslWithZero")
+  func testRorWithZero() {
+    print("debug: testRorWithZero")
     let pins = Pins()
-    let testValue1:UInt8 = 0x80
+    let testValue1:UInt8 = 0x01
     let memory = TestHelper.initMemory(pins)
     // First OP after reset is op
-    memory[TestHelper.RES_ADDR] = TestHelper.ASL
+    memory[TestHelper.RES_ADDR] = TestHelper.ROR
     memory[TestHelper.RES_ADDR&+1] = TestHelper.NOP
     let cpu = CPU6502(pins)
     cpu.reset()
@@ -129,16 +129,16 @@ final class AslTests: XCTestCase {
     cpu.status.value = Status6502.NEGATIVE
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
-    XCTAssertEqual(pins.data.value, TestHelper.ASL)
+    XCTAssertEqual(pins.data.value, TestHelper.ROR)
 
-    print("debug: perform ASL")
+    print("debug: perform ROR")
     // decode OP
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.ir.value, TestHelper.ASL)
+    XCTAssertEqual(cpu.ir.value, TestHelper.ROR)
 
-    // Shift A
+    // Rotate A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.a.value, testValue1 << 1)
+    XCTAssertEqual(cpu.a.value, testValue1 >> 1)
     XCTAssert(cpu.status.carry)
     XCTAssert(cpu.status.zero)
     XCTAssertFalse(cpu.status.negative)

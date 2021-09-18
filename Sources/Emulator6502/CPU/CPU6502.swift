@@ -167,7 +167,7 @@ class CPU6502 : Chip {
     case .I_ROL:
       (data.value, status.carry, status.negative, status.zero) = data.rotateLeft(carryIn: status.carry)
     case .I_ROR:
-      status.carry = false
+      (data.value, status.carry, status.negative, status.zero) = data.rotateRight(carryIn: status.carry)
     case .I_ADL_plus_X:
       (adl.value, addressCarry, _, _, _) = adl.adc(x.value, carryIn: false)
     case .I_ADL_plus_Y:
@@ -679,7 +679,8 @@ class CPU6502 : Chip {
       [.I_ADC, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Add to A, Next OP
     ],
     [ // 6a ROR
-      []
+      [.I_PC_to_ADDR_B], // Arg - discard, suppress PC incr
+      [.I_A_to_DATA, .I_ROR, .I_DATA_to_A, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Rotate A right, Next OP
     ],
     [ // 6b
       []

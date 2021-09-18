@@ -4,7 +4,7 @@ import Foundation
 
 final class RolTests: XCTestCase {
   func testRolNoCarry() {
-    print("debug: testRol")
+    print("debug: testRolNoCarry")
     let pins = Pins()
     let testValue1:UInt8 = 0x26
     let memory = TestHelper.initMemory(pins)
@@ -41,7 +41,7 @@ final class RolTests: XCTestCase {
   }
 
   func testRolWithCarry() {
-    print("debug: testRol")
+    print("debug: testRolWithCarry")
     let pins = Pins()
     let testValue1:UInt8 = 0x96
     let memory = TestHelper.initMemory(pins)
@@ -77,7 +77,7 @@ final class RolTests: XCTestCase {
   }
 
   func testRolWithNegative() {
-    print("debug: testRol")
+    print("debug: testRolWithNegative")
     let pins = Pins()
     let testValue1:UInt8 = 0x66
     let memory = TestHelper.initMemory(pins)
@@ -113,7 +113,7 @@ final class RolTests: XCTestCase {
   }
 
   func testRolWithZero() {
-    print("debug: testRol")
+    print("debug: testRolWithZero")
     let pins = Pins()
     let testValue1:UInt8 = 0x80
     let memory = TestHelper.initMemory(pins)

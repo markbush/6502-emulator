@@ -4,7 +4,7 @@ import Foundation
 
 final class LsrTests: XCTestCase {
   func testLsrNoCarry() {
-    print("debug: testLsr")
+    print("debug: testLsrNoCarry")
     let pins = Pins()
     let testValue1:UInt8 = 0x26
     let memory = TestHelper.initMemory(pins)
@@ -41,7 +41,7 @@ final class LsrTests: XCTestCase {
   }
 
   func testLsrWithCarry() {
-    print("debug: testLsr")
+    print("debug: testLsrWithCarry")
     let pins = Pins()
     let testValue1:UInt8 = 0x27
     let memory = TestHelper.initMemory(pins)
@@ -77,7 +77,7 @@ final class LsrTests: XCTestCase {
   }
 
   func testLsrWithZero() {
-    print("debug: testLsr")
+    print("debug: testLsrWithZero")
     let pins = Pins()
     let testValue1:UInt8 = 0x01
     let memory = TestHelper.initMemory(pins)
