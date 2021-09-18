@@ -163,7 +163,7 @@ class CPU6502 : Chip {
     case .I_ASL:
       (data.value, status.carry, status.negative, status.zero) = data.shiftLeft()
     case .I_LSR:
-      status.carry = false
+      (data.value, status.carry, status.negative, status.zero) = data.shiftRight()
     case .I_ROL:
       status.carry = false
     case .I_ROR:
@@ -508,7 +508,8 @@ class CPU6502 : Chip {
       [.I_EOR, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Eor to A, Next OP
     ],
     [ // 4a LSR
-      []
+      [.I_PC_to_ADDR_B], // Arg - discard, suppress PC incr
+      [.I_A_to_DATA, .I_LSR, .I_DATA_to_A, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Shift A right, Next OP
     ],
     [ // 4b
       []
