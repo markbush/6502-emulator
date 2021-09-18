@@ -2,21 +2,21 @@ import XCTest
 import Foundation
 @testable import Emulator6502
 
-final class LsrAbsTests: XCTestCase {
-  func testLsrAbs() {
-    print("debug: testLsrAbs")
+final class LsrZpTests: XCTestCase {
+  func testLsrZp() {
+    print("debug: testLsrZp")
     let pins = Pins()
     let testValue1:UInt8 = 0xc3
     let testValue2:UInt8 = 0x26
     let memory = TestHelper.initMemory(pins)
-    let memStore:UInt16 = 0x533c
+    let memStore:UInt16 = 0x003c
     // First OP after reset is op
-    memory[TestHelper.RES_ADDR] = TestHelper.LSRAbs
+    memory[TestHelper.RES_ADDR] = TestHelper.LSRZp
     memory[TestHelper.RES_ADDR&+1] = UInt8(memStore & 0xff) // low byte
-    memory[TestHelper.RES_ADDR&+2] = UInt8(memStore >> 8) // high byte
-    memory[TestHelper.RES_ADDR&+3] = TestHelper.NOP
+    memory[TestHelper.RES_ADDR&+2] = TestHelper.NOP
     memory[memStore] = testValue2
     let cpu = CPU6502(pins)
+    cpu.debug = true
     cpu.reset()
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
@@ -24,18 +24,14 @@ final class LsrAbsTests: XCTestCase {
 
     // Next instruction should be op at RESET address
     XCTAssertEqual(pins.address.value, TestHelper.RES_ADDR)
-    XCTAssertEqual(pins.data.value, TestHelper.LSRAbs)
+    XCTAssertEqual(pins.data.value, TestHelper.LSRZp)
 
     print("debug: perform LSR")
     // decode OP - fetch ADL
     TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(cpu.ir.value, TestHelper.LSRAbs)
+    XCTAssertEqual(cpu.ir.value, TestHelper.LSRZp)
 
-    // Save ADL - fetch ADH
-    TestHelper.cycle(cpu, pins: pins, mem: memory)
-    XCTAssertEqual(memory[memStore], testValue2)
-
-    // Save ADH - fetch arg
+    // Save ADL - fetch arg
     // Memory unchanged
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(pins.data.value, testValue2)
