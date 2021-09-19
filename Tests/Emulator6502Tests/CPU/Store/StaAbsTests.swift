@@ -35,7 +35,7 @@ final class StaAbsTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(pins.data.value, UInt8(memStore >> 8))
 
-    // Save ADH - store arg
+    // Save ADH - store A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(pins.data.value, testValue1)
 

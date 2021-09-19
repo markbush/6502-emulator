@@ -30,7 +30,7 @@ final class StaZpTests: XCTestCase {
     XCTAssertEqual(cpu.ir.value, TestHelper.STAZp)
     XCTAssertEqual(pins.data.value, UInt8(memStore & 0xff))
 
-    // Save ADL - store arg
+    // Save ADL - store A
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(pins.data.value, testValue1)
 

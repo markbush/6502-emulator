@@ -793,7 +793,12 @@ class CPU6502 : Chip {
       []
     ],
     [ // 81 STA (ZP,X)
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for BAL)
+      [.I_DATA_to_ADL, .I_AD_to_ADDR_B, .I_ADL_plus_X], // Read 00,BAL, do BAL=BAL+X
+      [.I_AD_to_ADDR_B, .I_ADL_INCR], // Ignore 00,BAL, Read 00,BAL+X (ADL), BAL=BAL+1
+      [.I_AD_to_ADDR_B, .I_DATA_to_ADL], // Save ADL, Read 00,BAL+X+1 (ADH)
+      [.I_DATA_to_ADH, .I_A_to_DATA, .I_AD_to_ADDR_B, .I_WRITE], // Write A
+      [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Add to A, Next OP
     ],
     [ // 82
       []
