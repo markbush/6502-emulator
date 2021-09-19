@@ -192,6 +192,34 @@ class CPU6502 : Chip {
       if (status.carry) {
         instructionCycle += 2
       }
+    case .I_BCS:
+      if (!status.carry) {
+        instructionCycle += 2
+      }
+    case .I_BEQ:
+      if (!status.zero) {
+        instructionCycle += 2
+      }
+    case .I_BNE:
+      if (status.zero) {
+        instructionCycle += 2
+      }
+    case .I_BMI:
+      if (!status.negative) {
+        instructionCycle += 2
+      }
+    case .I_BPL:
+      if (status.negative) {
+        instructionCycle += 2
+      }
+    case .I_BVC:
+      if (status.overflow) {
+        instructionCycle += 2
+      }
+    case .I_BVS:
+      if (!status.overflow) {
+        instructionCycle += 2
+      }
     }
   }
 
@@ -1016,7 +1044,10 @@ class CPU6502 : Chip {
       []
     ],
     [ // b0 BCS
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR, .I_BCS], // Read PC (for offset)
+      [.I_PCL_plus_DATA, .I_PC_to_ADDR_B, .I_CHK_carry], // Update PC
+      [.I_PCH_INCR, .I_PC_to_ADDR_B], // Adjust for carry
+      [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // b1 LDA (ZP),Y
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for IAL)
