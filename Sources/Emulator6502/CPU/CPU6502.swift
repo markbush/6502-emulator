@@ -1084,7 +1084,8 @@ class CPU6502 : Chip {
       []
     ],
     [ // c0 CPY Imm
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for Arg)
+      [.I_CPY, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Compare with Y, Next OP
     ],
     [ // c1 CMP (ZP,X)
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for BAL)
@@ -1101,7 +1102,9 @@ class CPU6502 : Chip {
       []
     ],
     [ // c4 CPY ZP
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
+      [.I_DATA_to_ADL, .I_AD_to_ADDR_B], // Read Arg
+      [.I_CPY, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Compare with Y, Next OP
     ],
     [ // c5 CMP ZP
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
@@ -1128,7 +1131,10 @@ class CPU6502 : Chip {
       []
     ],
     [ // cc CPY Abs
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
+      [.I_DATA_to_ADL, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH
+      [.I_DATA_to_ADH, .I_AD_to_ADDR_B], // Read Arg
+      [.I_CPY, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Compare with Y, Next OP
     ],
     [ // cd CMP Abs
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
