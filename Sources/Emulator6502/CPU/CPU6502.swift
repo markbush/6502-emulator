@@ -139,6 +139,8 @@ class CPU6502 : Chip {
     case .I_PCL_to_DATA: data.value = pc.low
     case .I_P_to_DATA: data.value = status.value
     case .I_A_to_DATA: data.value = a.value
+    case .I_X_to_DATA: data.value = x.value
+    case .I_Y_to_DATA: data.value = y.value
     case .I_DATA_to_PCH: pc.high = data.value
     case .I_DATA_to_PCL: pc.low = data.value
     case .I_DATA_to_ADH: adh.value = data.value
@@ -842,7 +844,10 @@ class CPU6502 : Chip {
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 8e STX Abs
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
+      [.I_DATA_to_ADL, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH
+      [.I_DATA_to_ADH, .I_X_to_DATA, .I_AD_to_ADDR_B, .I_WRITE], // Write X
+      [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 8f
       []
