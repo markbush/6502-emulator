@@ -11,5 +11,7 @@ case I_NEXT_OP, I_PC_INCR, I_SP_INCR, I_SP_DECR, I_WRITE,
   I_SBC, I_AND, I_EOR, I_ORA, I_CMP, I_CPX, I_CPY,
   I_DATA_to_X, I_DATA_to_Y,
   I_ASL, I_LSR, I_ROL, I_ROR,
-  I_X_to_DATA, I_Y_to_DATA
+  I_X_to_DATA, I_Y_to_DATA,
+  I_PCL_plus_DATA, I_PCH_INCR,
+  I_BCC
 }

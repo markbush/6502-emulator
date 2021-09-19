@@ -178,11 +178,19 @@ class CPU6502 : Chip {
       (adl.value, addressCarry, _, _, _) = adl.adc(x.value, carryIn: false)
     case .I_ADL_plus_Y:
       (adl.value, addressCarry, _, _, _) = adl.adc(y.value, carryIn: false)
+    case .I_PCL_plus_DATA:
+      (pc.lowLines.value, addressCarry, _, _, _) = pc.lowLines.adc(data.value, carryIn: false)
     case .I_ADL_INCR: adl.incr()
-    case .I_ADH_INCR: (adh.value, _, _, _, _) = adh.adc(0, carryIn: addressCarry) //adh.incr()
+    case .I_ADH_INCR: (adh.value, _, _, _, _) = adh.adc(0, carryIn: addressCarry)
+    case .I_PCH_INCR: (pc.highLines.value, _, _, _, _) = pc.highLines.adc(0, carryIn: addressCarry)
     case .I_CHK_carry:
       if (!addressCarry) {
         instructionCycle += 1
+      }
+      // Branching
+    case .I_BCC:
+      if (status.carry) {
+        instructionCycle += 2
       }
     }
   }
@@ -864,7 +872,10 @@ class CPU6502 : Chip {
       []
     ],
     [ // 90 BCC
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR, .I_BCC], // Read PC (for offset)
+      [.I_PCL_plus_DATA, .I_PC_to_ADDR_B, .I_CHK_carry], // Update PC
+      [.I_PCH_INCR, .I_PC_to_ADDR_B], // Adjust for carry
+      [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 91 STA (ZP),Y
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for IAL)
