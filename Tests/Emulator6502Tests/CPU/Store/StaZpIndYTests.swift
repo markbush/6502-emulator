@@ -19,7 +19,6 @@ final class StaZpIndYTests: XCTestCase {
     memory[memStore] = UInt8(actualStore & 0xff)
     memory[memStore + 1] = UInt8(actualStore >> 8)
     let cpu = CPU6502(pins)
-    cpu.debug = true
     cpu.reset()
 
     TestHelper.startupSequence(cpu: cpu, pins: pins, mem: memory)
