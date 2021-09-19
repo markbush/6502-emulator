@@ -182,6 +182,10 @@ class CPU6502 : Chip {
       (data.value, status.carry, status.negative, status.zero) = data.rotateLeft(carryIn: status.carry)
     case .I_ROR:
       (data.value, status.carry, status.negative, status.zero) = data.rotateRight(carryIn: status.carry)
+    case .I_INC:
+      (data.value, _, _, status.negative, status.zero) = data.adc(1, carryIn: false)
+    case .I_DEC:
+      (data.value, _, _, status.negative, status.zero) = data.adc(~1, carryIn: true)
     case .I_ADL_plus_X:
       (adl.value, addressCarry, _, _, _) = adl.adc(x.value, carryIn: false)
     case .I_ADL_plus_Y:
@@ -266,7 +270,7 @@ class CPU6502 : Chip {
     [ // 06 ASL ZP
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
       [.I_DATA_to_ADL, .I_AD_to_ADDR_B], // Read Arg
-      [.I_AD_to_ADDR_B, .I_WRITE], // Shift A left
+      [.I_AD_to_ADDR_B, .I_WRITE], // Shift data left
       [.I_ASL, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
@@ -302,7 +306,7 @@ class CPU6502 : Chip {
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
       [.I_DATA_to_ADL, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH
       [.I_DATA_to_ADH, .I_AD_to_ADDR_B], // Read Arg
-      [.I_AD_to_ADDR_B, .I_WRITE], // Shift A left
+      [.I_AD_to_ADDR_B, .I_WRITE], // Shift data left
       [.I_ASL, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
@@ -342,7 +346,7 @@ class CPU6502 : Chip {
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
       [.I_DATA_to_ADL, .I_AD_to_ADDR_B, .I_ADL_plus_X], // Read arg, ADL+X
       [.I_AD_to_ADDR_B], // Read arg from adjusted address
-      [.I_AD_to_ADDR_B, .I_WRITE], // Shift A left
+      [.I_AD_to_ADDR_B, .I_WRITE], // Shift data left
       [.I_ASL, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
@@ -381,7 +385,7 @@ class CPU6502 : Chip {
       [.I_DATA_to_ADL, .I_ADL_plus_X, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH, ADL+X
       [.I_DATA_to_ADH, .I_AD_to_ADDR_B], // Read Arg - discarded
       [.I_ADH_INCR, .I_AD_to_ADDR_B], // Read arg from adjusted address
-      [.I_AD_to_ADDR_B, .I_WRITE], // Shift A left
+      [.I_AD_to_ADDR_B, .I_WRITE], // Shift data left
       [.I_ASL, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
@@ -418,7 +422,7 @@ class CPU6502 : Chip {
     [ // 26 ROL ZP
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
       [.I_DATA_to_ADL, .I_AD_to_ADDR_B], // Read Arg
-      [.I_AD_to_ADDR_B, .I_WRITE], // Rotate A left
+      [.I_AD_to_ADDR_B, .I_WRITE], // Rotate data left
       [.I_ROL, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
@@ -458,7 +462,7 @@ class CPU6502 : Chip {
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
       [.I_DATA_to_ADL, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH
       [.I_DATA_to_ADH, .I_AD_to_ADDR_B], // Read Arg
-      [.I_AD_to_ADDR_B, .I_WRITE], // Rotate A left
+      [.I_AD_to_ADDR_B, .I_WRITE], // Rotate data left
       [.I_ROL, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
@@ -498,7 +502,7 @@ class CPU6502 : Chip {
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
       [.I_DATA_to_ADL, .I_AD_to_ADDR_B, .I_ADL_plus_X], // Read arg, ADL+X
       [.I_AD_to_ADDR_B], // Read arg from adjusted address
-      [.I_AD_to_ADDR_B, .I_WRITE], // Rotate A left
+      [.I_AD_to_ADDR_B, .I_WRITE], // Rotate data left
       [.I_ROL, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
@@ -537,7 +541,7 @@ class CPU6502 : Chip {
       [.I_DATA_to_ADL, .I_ADL_plus_X, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH, ADL+X
       [.I_DATA_to_ADH, .I_AD_to_ADDR_B], // Read Arg - discarded
       [.I_ADH_INCR, .I_AD_to_ADDR_B], // Read arg from adjusted address
-      [.I_AD_to_ADDR_B, .I_WRITE], // Rotate A left
+      [.I_AD_to_ADDR_B, .I_WRITE], // Rotate data left
       [.I_ROL, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
@@ -577,7 +581,7 @@ class CPU6502 : Chip {
     [ // 46 LSR ZP
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
       [.I_DATA_to_ADL, .I_AD_to_ADDR_B], // Read Arg
-      [.I_AD_to_ADDR_B, .I_WRITE], // Shift A right
+      [.I_AD_to_ADDR_B, .I_WRITE], // Shift data right
       [.I_LSR, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
@@ -615,7 +619,7 @@ class CPU6502 : Chip {
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
       [.I_DATA_to_ADL, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH
       [.I_DATA_to_ADH, .I_AD_to_ADDR_B], // Read Arg
-      [.I_AD_to_ADDR_B, .I_WRITE], // Shift A right
+      [.I_AD_to_ADDR_B, .I_WRITE], // Shift data right
       [.I_LSR, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
@@ -655,7 +659,7 @@ class CPU6502 : Chip {
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
       [.I_DATA_to_ADL, .I_AD_to_ADDR_B, .I_ADL_plus_X], // Read arg, ADL+X
       [.I_AD_to_ADDR_B], // Read arg from adjusted address
-      [.I_AD_to_ADDR_B, .I_WRITE], // Shift A right
+      [.I_AD_to_ADDR_B, .I_WRITE], // Shift data right
       [.I_LSR, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
@@ -694,7 +698,7 @@ class CPU6502 : Chip {
       [.I_DATA_to_ADL, .I_ADL_plus_X, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH, ADL+X
       [.I_DATA_to_ADH, .I_AD_to_ADDR_B], // Read Arg - discarded
       [.I_ADH_INCR, .I_AD_to_ADDR_B], // Read arg from adjusted address
-      [.I_AD_to_ADDR_B, .I_WRITE], // Shift A right
+      [.I_AD_to_ADDR_B, .I_WRITE], // Shift data right
       [.I_LSR, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
@@ -729,7 +733,7 @@ class CPU6502 : Chip {
     [ // 66 ROR ZP
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
       [.I_DATA_to_ADL, .I_AD_to_ADDR_B], // Read Arg
-      [.I_AD_to_ADDR_B, .I_WRITE], // Rotate A right
+      [.I_AD_to_ADDR_B, .I_WRITE], // Rotate data right
       [.I_ROR, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
@@ -770,7 +774,7 @@ class CPU6502 : Chip {
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
       [.I_DATA_to_ADL, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH
       [.I_DATA_to_ADH, .I_AD_to_ADDR_B], // Read Arg
-      [.I_AD_to_ADDR_B, .I_WRITE], // Rotate A right
+      [.I_AD_to_ADDR_B, .I_WRITE], // Rotate data right
       [.I_ROR, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
@@ -810,8 +814,8 @@ class CPU6502 : Chip {
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
       [.I_DATA_to_ADL, .I_AD_to_ADDR_B, .I_ADL_plus_X], // Read arg, ADL+X
       [.I_AD_to_ADDR_B], // Read arg from adjusted address
-      [.I_AD_to_ADDR_B, .I_WRITE], // Shift A right
-      [.I_LSR, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
+      [.I_AD_to_ADDR_B, .I_WRITE], // Shift data right
+      [.I_ROR, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 77
@@ -849,7 +853,7 @@ class CPU6502 : Chip {
       [.I_DATA_to_ADL, .I_ADL_plus_X, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH, ADL+X
       [.I_DATA_to_ADH, .I_AD_to_ADDR_B], // Read Arg - discarded
       [.I_ADH_INCR, .I_AD_to_ADDR_B], // Read arg from adjusted address
-      [.I_AD_to_ADDR_B, .I_WRITE], // Rotate A right
+      [.I_AD_to_ADDR_B, .I_WRITE], // Rotate data right
       [.I_ROR, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
@@ -1210,7 +1214,12 @@ class CPU6502 : Chip {
       [.I_CMP, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Compare with A, Next OP
     ],
     [ // ce DEC Abs
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
+      [.I_DATA_to_ADL, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH
+      [.I_DATA_to_ADH, .I_AD_to_ADDR_B], // Read Arg
+      [.I_AD_to_ADDR_B, .I_WRITE], // Decrement data
+      [.I_DEC, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
+      [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // cf
       []
