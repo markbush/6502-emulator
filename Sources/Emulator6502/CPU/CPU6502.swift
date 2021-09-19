@@ -837,7 +837,10 @@ class CPU6502 : Chip {
       []
     ],
     [ // 8c STY Abs
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
+      [.I_DATA_to_ADL, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH
+      [.I_DATA_to_ADH, .I_Y_to_DATA, .I_AD_to_ADDR_B, .I_WRITE], // Write Y
+      [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 8d STA Abs
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
