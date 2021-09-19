@@ -101,6 +101,11 @@ class CPU6502 : Chip {
     status.negative = register[7]
   }
 
+  func checkNV(_ register: Register8) {
+    status.overflow = register[6]
+    status.negative = register[7]
+  }
+
   func perform(_ instruction:CPU6502Instruction) {
     switch instruction {
       // Flags / interrupt
@@ -166,6 +171,9 @@ class CPU6502 : Chip {
       (_, status.carry, _, status.negative, status.zero) = x.adc(~data.value, carryIn: true)
     case .I_CPY:
       (_, status.carry, _, status.negative, status.zero) = y.adc(~data.value, carryIn: true)
+    case .I_BIT:
+      (_, _, status.zero) = a.and(data.value)
+      checkNV(data)
     case .I_ASL:
       (data.value, status.carry, status.negative, status.zero) = data.shiftLeft()
     case .I_LSR:
@@ -433,7 +441,10 @@ class CPU6502 : Chip {
       []
     ],
     [ // 2c BIT Abs
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
+      [.I_DATA_to_ADL, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH
+      [.I_DATA_to_ADH, .I_AD_to_ADDR_B], // Read Arg
+      [.I_BIT, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Compare with A, Next OP
     ],
     [ // 2d AND Abs
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
