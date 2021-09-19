@@ -406,7 +406,9 @@ class CPU6502 : Chip {
       []
     ],
     [ // 24 BIT ZP
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
+      [.I_DATA_to_ADL, .I_AD_to_ADDR_B], // Read Arg
+      [.I_BIT, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Compare with A, Next OP
     ],
     [ // 25 AND ZP
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
