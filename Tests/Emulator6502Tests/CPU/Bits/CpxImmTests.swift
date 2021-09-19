@@ -29,7 +29,7 @@ final class CpxImmTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.CPXImm)
 
-    // Cpx arg to X - X unchanged
+    // Cmp arg to X - X unchanged
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.x.value, testValue1)
     XCTAssert(cpu.status.carry)
@@ -67,7 +67,7 @@ final class CpxImmTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.CPXImm)
 
-    // Cpx arg to X - X unchanged
+    // Cmp arg to X - X unchanged
     // Carry, zero should be set, negative overflow clear
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.x.value, testValue1)
@@ -106,7 +106,7 @@ final class CpxImmTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.CPXImm)
 
-    // Cpx arg to X - X unchanged
+    // Cmp arg to X - X unchanged
     // Carry, zero should be clear, negative set
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.x.value, testValue1)
