@@ -162,6 +162,10 @@ class CPU6502 : Chip {
       (a.value, status.negative, status.zero) = a.or(data.value)
     case .I_CMP:
       (_, status.carry, _, status.negative, status.zero) = a.adc(~data.value, carryIn: true)
+    case .I_CPX:
+      (_, status.carry, _, status.negative, status.zero) = x.adc(~data.value, carryIn: true)
+    case .I_CPY:
+      (_, status.carry, _, status.negative, status.zero) = y.adc(~data.value, carryIn: true)
     case .I_ASL:
       (data.value, status.carry, status.negative, status.zero) = data.shiftLeft()
     case .I_LSR:
@@ -1204,7 +1208,8 @@ class CPU6502 : Chip {
       []
     ],
     [ // e0 CPX Imm
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for Arg)
+      [.I_CPX, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Compare with X, Next OP
     ],
     [ // e1 SBC (ZP,X)
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for BAL)
