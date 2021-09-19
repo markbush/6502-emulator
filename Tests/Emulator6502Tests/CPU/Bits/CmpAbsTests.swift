@@ -48,7 +48,7 @@ final class CmpAbsTests: XCTestCase {
     XCTAssertFalse(cpu.status.zero)
     XCTAssertFalse(cpu.status.negative)
 
-    // Decode NOP - stack should contain A
+    // Decode NOP
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.NOP)
   }

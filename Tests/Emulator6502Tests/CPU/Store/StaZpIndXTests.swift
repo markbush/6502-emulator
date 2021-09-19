@@ -53,7 +53,7 @@ final class StaZpIndXTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(memory[actualStore], testValue1)
 
-    // Decode NOP - stack should contain A
+    // Decode NOP
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.NOP)
   }

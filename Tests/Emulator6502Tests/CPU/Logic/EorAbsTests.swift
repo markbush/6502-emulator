@@ -43,7 +43,7 @@ final class EorAbsTests: XCTestCase {
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.a.value, testValue1 ^ testValue2)
 
-    // Decode NOP - stack should contain A
+    // Decode NOP
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.NOP)
   }

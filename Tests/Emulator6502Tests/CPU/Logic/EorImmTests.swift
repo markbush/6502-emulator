@@ -36,7 +36,7 @@ final class EorImmTests: XCTestCase {
     XCTAssertFalse(cpu.status.zero)
     XCTAssertFalse(cpu.status.negative)
 
-    // Decode NOP - stack should contain A
+    // Decode NOP
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.NOP)
   }
@@ -74,7 +74,7 @@ final class EorImmTests: XCTestCase {
     XCTAssert(cpu.status.zero)
     XCTAssertFalse(cpu.status.negative)
 
-    // Decode NOP - stack should contain A
+    // Decode NOP
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.NOP)
   }
@@ -112,7 +112,7 @@ final class EorImmTests: XCTestCase {
     XCTAssertFalse(cpu.status.zero)
     XCTAssert(cpu.status.negative)
 
-    // Decode NOP - stack should contain A
+    // Decode NOP
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.NOP)
   }

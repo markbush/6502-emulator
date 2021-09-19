@@ -38,7 +38,7 @@ final class SbcImmTests: XCTestCase {
     XCTAssertFalse(cpu.status.negative)
     XCTAssertFalse(cpu.status.overflow)
 
-    // Decode NOP - stack should contain A
+    // Decode NOP
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.NOP)
   }
@@ -78,7 +78,7 @@ final class SbcImmTests: XCTestCase {
     XCTAssertFalse(cpu.status.negative)
     XCTAssertFalse(cpu.status.overflow)
 
-    // Decode NOP - stack should contain A
+    // Decode NOP
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.NOP)
   }
@@ -118,7 +118,7 @@ final class SbcImmTests: XCTestCase {
     XCTAssert(cpu.status.negative)
     XCTAssertFalse(cpu.status.overflow)
 
-    // Decode NOP - stack should contain A
+    // Decode NOP
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.NOP)
   }
@@ -157,7 +157,7 @@ final class SbcImmTests: XCTestCase {
     XCTAssert(cpu.status.negative)
     XCTAssert(cpu.status.overflow)
 
-    // Decode NOP - stack should contain A
+    // Decode NOP
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.NOP)
   }
@@ -196,7 +196,7 @@ final class SbcImmTests: XCTestCase {
     XCTAssertFalse(cpu.status.negative)
     XCTAssert(cpu.status.overflow)
 
-    // Decode NOP - stack should contain A
+    // Decode NOP
     TestHelper.cycle(cpu, pins: pins, mem: memory)
     XCTAssertEqual(cpu.ir.value, TestHelper.NOP)
   }
