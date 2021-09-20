@@ -905,7 +905,8 @@ class CPU6502 : Chip {
       []
     ],
     [ // 8a TXA
-      []
+      [.I_PC_to_ADDR_B], // Arg - discard, suppress PC incr
+      [.I_X_to_DATA, .I_DATA_to_A, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // X to A, Next OP
     ],
     [ // 8b
       []
