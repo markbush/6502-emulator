@@ -1194,7 +1194,8 @@ class CPU6502 : Chip {
       []
     ],
     [ // c8 INY
-      []
+      [.I_PC_to_ADDR_B], // Arg - discard, suppress PC incr
+      [.I_Y_to_DATA, .I_INC, .I_DATA_to_Y, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Increment Y, Next OP
     ],
     [ // c9 CMP Imm
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for Arg)
