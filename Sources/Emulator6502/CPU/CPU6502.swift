@@ -974,7 +974,8 @@ class CPU6502 : Chip {
       []
     ],
     [ // 98 TYA
-      []
+      [.I_PC_to_ADDR_B], // Arg - discard, suppress PC incr
+      [.I_Y_to_DATA, .I_DATA_to_A, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Y to A, Next OP
     ],
     [ // 99 STA Abs,Y
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
