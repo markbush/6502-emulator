@@ -713,7 +713,12 @@ class CPU6502 : Chip {
       []
     ],
     [ // 60 RTS
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Arg - discard
+      [.I_SP_to_ADDR_B, .I_SP_INCR], // Read SP
+      [.I_SP_to_ADDR_B, .I_SP_INCR], // Discard, Read SP for PCL
+      [.I_DATA_to_PCL, .I_SP_to_ADDR_B], // Load PCL, Read SP for PCH
+      [.I_DATA_to_PCH, .I_PC_to_ADDR_B, .I_PC_INCR], // Load PCH, Read PC, incr PC
+      [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 61 ADC (ZP,X)
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for BAL)
