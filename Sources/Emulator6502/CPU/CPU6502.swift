@@ -896,7 +896,8 @@ class CPU6502 : Chip {
       []
     ],
     [ // 88 DEY
-      []
+      [.I_PC_to_ADDR_B], // Arg - discard, suppress PC incr
+      [.I_Y_to_DATA, .I_DEC, .I_DATA_to_Y, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Decrement Y, Next OP
     ],
     [ // 89
       []
