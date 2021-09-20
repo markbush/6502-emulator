@@ -1047,7 +1047,8 @@ class CPU6502 : Chip {
       [.I_DATA_to_A, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Load A, Next OP
     ],
     [ // aa TAX
-      []
+      [.I_PC_to_ADDR_B], // Arg - discard, suppress PC incr
+      [.I_A_to_DATA, .I_DATA_to_X, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // A to X, Next OP
     ],
     [ // ab
       []
