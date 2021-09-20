@@ -1368,7 +1368,12 @@ class CPU6502 : Chip {
       [.I_SBC, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Subtract from A, Next OP
     ],
     [ // ee INC Abs
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
+      [.I_DATA_to_ADL, .I_PC_to_ADDR_B, .I_PC_INCR], // Read ADH
+      [.I_DATA_to_ADH, .I_AD_to_ADDR_B], // Read Arg
+      [.I_AD_to_ADDR_B, .I_WRITE], // Increment data
+      [.I_INC, .I_AD_to_ADDR_B, .I_WRITE], // Write correct value
+      [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // ef
       []
