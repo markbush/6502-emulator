@@ -1200,7 +1200,8 @@ class CPU6502 : Chip {
       [.I_CMP, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Compare with A, Next OP
     ],
     [ // ca DEX
-      []
+      [.I_PC_to_ADDR_B], // Arg - discard, suppress PC incr
+      [.I_X_to_DATA, .I_DEC, .I_DATA_to_X, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Decrement X, Next OP
     ],
     [ // cb
       []
