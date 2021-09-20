@@ -1040,7 +1040,8 @@ class CPU6502 : Chip {
       []
     ],
     [ // a8 TAY
-      []
+      [.I_PC_to_ADDR_B], // Arg - discard, suppress PC incr
+      [.I_A_to_DATA, .I_DATA_to_Y, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // A to Y, Next OP
     ],
     [ // a9 LDA Imm
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for Arg)
