@@ -185,9 +185,13 @@ class TestHelper {
     return mem
   }
 
-  static func cycle(_ cpu: CPU6502, pins: Pins, mem: Memory) {
+  static func cycle(_ cpu: CPU6502, pins: Pins, mem: Memory, _ debug: Bool = false) {
     cpu.tick()
     mem.tick()
+    if debug && cpu.debug {
+      print(String(format:"                 Stack: %02x [%02x %02x %02x %02x]",
+        cpu.sp.value, mem[0x01ff], mem[0x01fe], mem[0x01fd], mem[0x01fc]))
+    }
   }
 
   static func run(_ cpu: CPU6502, pins: Pins, mem: Memory, forCycles cycles:Int) {

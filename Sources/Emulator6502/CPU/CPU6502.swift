@@ -395,7 +395,12 @@ class CPU6502 : Chip {
       []
     ],
     [ // 20 JSR
-      []
+      [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for ADL)
+      [.I_DATA_to_ADL, .I_SP_to_ADDR_B, .I_WRITE], // Store ADL
+      [.I_SP_to_ADDR_B, .I_PCH_to_DATA, .I_WRITE, .I_SP_DECR], // Store PCH
+      [.I_SP_to_ADDR_B, .I_PCL_to_DATA, .I_WRITE, .I_SP_DECR], // Store PCL
+      [.I_PC_to_ADDR_B], // Read PC (for ADH)
+      [.I_DATA_to_ADH, .I_AD_to_ADDR_B, .I_ADDR_B_to_PC, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 21 AND (ZP,X)
       [.I_PC_to_ADDR_B, .I_PC_INCR], // Read PC (for BAL)
