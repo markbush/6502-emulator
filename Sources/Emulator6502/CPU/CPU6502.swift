@@ -155,7 +155,7 @@ class CPU6502 : Chip {
     case .I_DATA_to_A: a.value = data.value ; checkNZ(a)
     case .I_DATA_to_X: x.value = data.value ; checkNZ(x)
     case .I_DATA_to_Y: y.value = data.value ; checkNZ(y)
-    case .I_DATA_to_S: sp.value = data.value ; checkNZ(sp)
+    case .I_DATA_to_S: sp.value = data.value
       // Arithmetic
     case .I_ADC:
       (a.value, status.carry, status.overflow, status.negative, status.zero) = a.adc(data.value, carryIn: status.carry)
@@ -983,8 +983,9 @@ class CPU6502 : Chip {
       [.I_ADH_INCR, .I_A_to_DATA, .I_AD_to_ADDR_B, .I_WRITE], // Write A
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
-    [ // 9a TSX
-      []
+    [ // 9a TXS
+      [.I_PC_to_ADDR_B], // Arg - discard, suppress PC incr
+      [.I_X_to_DATA, .I_DATA_to_S, .I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // X to S, Next OP
     ],
     [ // 9b
       []
