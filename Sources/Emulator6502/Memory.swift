@@ -2,7 +2,7 @@ public class Memory : Chip {
   var mem = Array(repeating: UInt8(0), count: 0x10000) // 64K
   let pins: Pins
 
-  init(_ pins: Pins) {
+  public init(_ pins: Pins) {
     self.pins = pins
   }
 

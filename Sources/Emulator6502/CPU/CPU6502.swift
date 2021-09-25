@@ -21,7 +21,7 @@ public class CPU6502 : Chip {
 
   let pins: Pins
 
-  init(_ pins: Pins) {
+  public init(_ pins: Pins) {
     self.pins = pins
     adh = ad.highLines
     adl = ad.lowLines
