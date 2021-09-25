@@ -12,7 +12,7 @@ case I_NEXT_OP, I_PC_INCR, I_SP_INCR, I_SP_DECR, I_WRITE,
   I_DATA_to_X, I_DATA_to_Y,
   I_ASL, I_LSR, I_ROL, I_ROR,
   I_X_to_DATA, I_Y_to_DATA,
-  I_PCL_plus_DATA, I_PCH_INCR,
+  I_PCL_plus_DATA, I_PCH_ADJ, I_CHK_branch,
   I_BCC, I_BCS, I_BEQ, I_BNE, I_BMI, I_BPL, I_BVC, I_BVS,
   I_BIT, I_DEC, I_INC,
   I_S_to_DATA, I_DATA_to_S

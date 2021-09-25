@@ -18,6 +18,7 @@ public class CPU6502 : Chip {
   var instructionCycle = 0
   var interruptType: InterruptType = .reset
   var addressCarry = false
+  var branchForward = false
 
   let pins: Pins
 
@@ -193,15 +194,25 @@ public class CPU6502 : Chip {
     case .I_ADL_plus_Y:
       (adl.value, addressCarry, _, _, _) = adl.adc(y.value, carryIn: false)
     case .I_PCL_plus_DATA:
+      branchForward = data.value < 0x80
       (pc.lowLines.value, addressCarry, _, _, _) = pc.lowLines.adc(data.value, carryIn: false)
     case .I_ADL_INCR: adl.incr()
     case .I_ADH_INCR: (adh.value, _, _, _, _) = adh.adc(0, carryIn: addressCarry)
-    case .I_PCH_INCR: (pc.highLines.value, _, _, _, _) = pc.highLines.adc(0, carryIn: addressCarry)
+    case .I_PCH_ADJ:
+      if branchForward {
+        pc.highLines.incr()
+      } else {
+        pc.highLines.decr()
+      }
     case .I_CHK_carry:
       if (!addressCarry) {
         instructionCycle += 1
       }
       // Branching
+    case .I_CHK_branch:
+      if (!addressCarry && branchForward) || (addressCarry && !branchForward) {
+        instructionCycle += 1
+      }
     case .I_BCC:
       if (status.carry) {
         instructionCycle += 2
@@ -317,8 +328,8 @@ public class CPU6502 : Chip {
     ],
     [ // 10 BPL
       [.I_PC_to_ADDR_B, .I_PC_INCR, .I_BPL], // Read PC (for offset)
-      [.I_PCL_plus_DATA, .I_PC_to_ADDR_B, .I_CHK_carry], // Update PC
-      [.I_PCH_INCR, .I_PC_to_ADDR_B], // Adjust for carry
+      [.I_PCL_plus_DATA, .I_PC_to_ADDR_B, .I_CHK_branch], // Update PC
+      [.I_PCH_ADJ, .I_PC_to_ADDR_B], // Adjust for carry
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 11 ORA (ZP),Y
@@ -478,8 +489,8 @@ public class CPU6502 : Chip {
     ],
     [ // 30 BMI
       [.I_PC_to_ADDR_B, .I_PC_INCR, .I_BMI], // Read PC (for offset)
-      [.I_PCL_plus_DATA, .I_PC_to_ADDR_B, .I_CHK_carry], // Update PC
-      [.I_PCH_INCR, .I_PC_to_ADDR_B], // Adjust for carry
+      [.I_PCL_plus_DATA, .I_PC_to_ADDR_B, .I_CHK_branch], // Update PC
+      [.I_PCH_ADJ, .I_PC_to_ADDR_B], // Adjust for carry
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 31 AND (ZP),Y
@@ -635,8 +646,8 @@ public class CPU6502 : Chip {
     ],
     [ // 50 BVC
       [.I_PC_to_ADDR_B, .I_PC_INCR, .I_BVC], // Read PC (for offset)
-      [.I_PCL_plus_DATA, .I_PC_to_ADDR_B, .I_CHK_carry], // Update PC
-      [.I_PCH_INCR, .I_PC_to_ADDR_B], // Adjust for carry
+      [.I_PCL_plus_DATA, .I_PC_to_ADDR_B, .I_CHK_branch], // Update PC
+      [.I_PCH_ADJ, .I_PC_to_ADDR_B], // Adjust for carry
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 51 EOR (ZP),Y
@@ -795,8 +806,8 @@ public class CPU6502 : Chip {
     ],
     [ // 70 BVS
       [.I_PC_to_ADDR_B, .I_PC_INCR, .I_BVS], // Read PC (for offset)
-      [.I_PCL_plus_DATA, .I_PC_to_ADDR_B, .I_CHK_carry], // Update PC
-      [.I_PCH_INCR, .I_PC_to_ADDR_B], // Adjust for carry
+      [.I_PCL_plus_DATA, .I_PC_to_ADDR_B, .I_CHK_branch], // Update PC
+      [.I_PCH_ADJ, .I_PC_to_ADDR_B], // Adjust for carry
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 71 ADC (ZP),Y
@@ -944,8 +955,8 @@ public class CPU6502 : Chip {
     ],
     [ // 90 BCC
       [.I_PC_to_ADDR_B, .I_PC_INCR, .I_BCC], // Read PC (for offset)
-      [.I_PCL_plus_DATA, .I_PC_to_ADDR_B, .I_CHK_carry], // Update PC
-      [.I_PCH_INCR, .I_PC_to_ADDR_B], // Adjust for carry
+      [.I_PCL_plus_DATA, .I_PC_to_ADDR_B, .I_CHK_branch], // Update PC
+      [.I_PCH_ADJ, .I_PC_to_ADDR_B], // Adjust for carry
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // 91 STA (ZP),Y
@@ -1092,8 +1103,8 @@ public class CPU6502 : Chip {
     ],
     [ // b0 BCS
       [.I_PC_to_ADDR_B, .I_PC_INCR, .I_BCS], // Read PC (for offset)
-      [.I_PCL_plus_DATA, .I_PC_to_ADDR_B, .I_CHK_carry], // Update PC
-      [.I_PCH_INCR, .I_PC_to_ADDR_B], // Adjust for carry
+      [.I_PCL_plus_DATA, .I_PC_to_ADDR_B, .I_CHK_branch], // Update PC
+      [.I_PCH_ADJ, .I_PC_to_ADDR_B], // Adjust for carry
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // b1 LDA (ZP),Y
@@ -1251,8 +1262,8 @@ public class CPU6502 : Chip {
     ],
     [ // d0 BNE
       [.I_PC_to_ADDR_B, .I_PC_INCR, .I_BNE], // Read PC (for offset)
-      [.I_PCL_plus_DATA, .I_PC_to_ADDR_B, .I_CHK_carry], // Update PC
-      [.I_PCH_INCR, .I_PC_to_ADDR_B], // Adjust for carry
+      [.I_PCL_plus_DATA, .I_PC_to_ADDR_B, .I_CHK_branch], // Update PC
+      [.I_PCH_ADJ, .I_PC_to_ADDR_B], // Adjust for carry
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // d1 CMP (ZP),Y
@@ -1406,8 +1417,8 @@ public class CPU6502 : Chip {
     ],
     [ // f0 BEQ
       [.I_PC_to_ADDR_B, .I_PC_INCR, .I_BEQ], // Read PC (for offset)
-      [.I_PCL_plus_DATA, .I_PC_to_ADDR_B, .I_CHK_carry], // Update PC
-      [.I_PCH_INCR, .I_PC_to_ADDR_B], // Adjust for carry
+      [.I_PCL_plus_DATA, .I_PC_to_ADDR_B, .I_CHK_branch], // Update PC
+      [.I_PCH_ADJ, .I_PC_to_ADDR_B], // Adjust for carry
       [.I_PC_to_ADDR_B, .I_NEXT_OP, .I_PC_INCR] // Next OP
     ],
     [ // f1 SBC (ZP),Y

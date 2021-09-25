@@ -84,7 +84,7 @@ final class BneTests: XCTestCase {
     print("debug: testBneBranchPageCross")
     let pins = Pins()
     let memory = TestHelper.initMemory(pins)
-    let offset:UInt8 = 0xf0
+    let offset:UInt8 = 0x61
     let target:UInt16 = TestHelper.RES_ADDR + UInt16(offset) + 2
     // First OP after reset is op
     memory[TestHelper.RES_ADDR] = TestHelper.BNE
