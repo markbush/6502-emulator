@@ -1,4 +1,4 @@
-class Status6502 : Register8 {
+public class Status6502 : Register8 {
   static let CARRY:UInt8 = 0b0000_0001
   static let CARRY_MASK:UInt8 = ~CARRY
   static let ZERO:UInt8 = 0b0000_0010

@@ -1,3 +1,3 @@
-protocol Chip {
+public protocol Chip {
   func tick() -> Void
 }

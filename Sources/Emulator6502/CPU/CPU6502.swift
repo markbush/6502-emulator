@@ -1,6 +1,6 @@
 import Foundation
 
-class CPU6502 : Chip {
+public class CPU6502 : Chip {
   var debug = false
 
   let a = Register8()
@@ -27,7 +27,7 @@ class CPU6502 : Chip {
     adl = ad.lowLines
   }
 
-  func tick() -> Void {
+  public func tick() -> Void {
     if pins.ready.isLow() || pins.reset.isLow() {
       return // Halted
     }

@@ -1,4 +1,4 @@
-class Pin {
+public class Pin {
   var value:Bool
   init(_ isOn:Bool) {
     value = isOn

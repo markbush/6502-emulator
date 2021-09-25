@@ -1,4 +1,4 @@
-class Pins {
+public class Pins {
     let address = Bus16()
     let data = Bus8()
     let read = Pin(true)

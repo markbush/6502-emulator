@@ -1,4 +1,4 @@
-class Bus16 {
+public class Bus16 {
   let highLines = Register8()
   let lowLines = Register8()
   var value:UInt16 {

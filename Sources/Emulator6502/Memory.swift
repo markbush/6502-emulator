@@ -1,6 +1,4 @@
-@testable import Emulator6502
-
-class Memory : Chip {
+public class Memory : Chip {
   var mem = Array(repeating: UInt8(0), count: 0x10000) // 64K
   let pins: Pins
 
@@ -8,12 +6,12 @@ class Memory : Chip {
     self.pins = pins
   }
 
-  subscript(index: UInt16) -> UInt8 {
+  public subscript(index: UInt16) -> UInt8 {
     get { mem[Int(index)] }
     set { mem[Int(index)] = newValue }
   }
 
-  func tick() -> Void {
+  public func tick() -> Void {
     if pins.read.isHigh() {
       pins.data.value = self[pins.address.value]
     } else {

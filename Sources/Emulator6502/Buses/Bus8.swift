@@ -1,4 +1,4 @@
-class Bus8 {
+public class Bus8 {
   var value:UInt8 = 0
 
   subscript(index:Int) -> Bool {

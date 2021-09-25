@@ -1,4 +1,4 @@
-class Register16 : Bus16 {
+public class Register16 : Bus16 {
   func incr() {
     value = value &+ 1
   }

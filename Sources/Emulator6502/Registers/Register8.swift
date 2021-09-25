@@ -1,4 +1,4 @@
-class Register8 : Bus8 {
+public class Register8 : Bus8 {
   func shiftLeft() -> (UInt8,Bool,Bool,Bool) {
     let carryOut = (value & 0b1000_0000) == 0b1000_0000
     let newValue = value << 1
