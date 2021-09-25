@@ -1,7 +1,7 @@
 import Foundation
 
 public class CPU6502 : Chip {
-  var debug = false
+  public var debug = false
 
   let a = Register8()
   let x = Register8()
@@ -54,7 +54,7 @@ public class CPU6502 : Chip {
     }
   }
 
-  func reset() {
+  public func reset() {
     pins.reset.set() // Reset conditoin is cleared
     pins.read.set() // Ensure no data is written out during startup
     status.decimal = false
