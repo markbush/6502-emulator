@@ -3,16 +3,16 @@ public class Pin {
   init(_ isOn:Bool) {
     value = isOn
   }
-  func set() {
+  public func set() {
     value = true
   }
-  func clear() {
+  public func clear() {
     value = false
   }
-  func isHigh() -> Bool {
+  public func isHigh() -> Bool {
     return value
   }
-  func isLow() -> Bool {
+  public func isLow() -> Bool {
     return !value
   }
 }

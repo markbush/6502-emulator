@@ -14,31 +14,31 @@ public class Status6502 : Register8 {
   static let NEGATIVE:UInt8 = 0b1000_0000
   static let NEGATIVE_MASK:UInt8 = ~NEGATIVE
 
-  var carry:Bool {
+  public var carry:Bool {
     get { (value & Status6502.CARRY) == Status6502.CARRY }
     set { value = (value & Status6502.CARRY_MASK) | (newValue ? Status6502.CARRY : 0) }
   }
-  var zero:Bool {
+  public var zero:Bool {
     get { (value & Status6502.ZERO) == Status6502.ZERO }
     set { value = (value & Status6502.ZERO_MASK) | (newValue ? Status6502.ZERO : 0) }
   }
-  var interrupt:Bool {
+  public var interrupt:Bool {
     get { (value & Status6502.INTERRUPT) == Status6502.INTERRUPT }
     set { value = (value & Status6502.INTERRUPT_MASK) | (newValue ? Status6502.INTERRUPT : 0) }
   }
-  var decimal:Bool {
+  public var decimal:Bool {
     get { (value & Status6502.DECIMAL) == Status6502.DECIMAL }
     set { value = (value & Status6502.DECIMAL_MASK) | (newValue ? Status6502.DECIMAL : 0) }
   }
-  var brk:Bool {
+  public var brk:Bool {
     get { (value & Status6502.BREAK) == Status6502.BREAK }
     set { value = (value & Status6502.BREAK_MASK) | (newValue ? Status6502.BREAK : 0) }
   }
-  var overflow:Bool {
+  public var overflow:Bool {
     get { (value & Status6502.OVERFLOW) == Status6502.OVERFLOW }
     set { value = (value & Status6502.OVERFLOW_MASK) | (newValue ? Status6502.OVERFLOW : 0) }
   }
-  var negative:Bool {
+  public var negative:Bool {
     get { (value & Status6502.NEGATIVE) == Status6502.NEGATIVE }
     set { value = (value & Status6502.NEGATIVE_MASK) | (newValue ? Status6502.NEGATIVE : 0) }
   }

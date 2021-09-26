@@ -9,7 +9,7 @@ public class CPU6502 : Chip {
   let sp = Register8()
   let pc = Register16()
   let status = Status6502()
-  let ir = Register8() // Instruction Register
+  public let ir = Register8() // Instruction Register
   let ad = Register16() // Internal address register
   let adh:Register8
   let adl:Register8
@@ -1530,7 +1530,7 @@ public class CPU6502 : Chip {
     "BEQ", "SBC (zp),Y", "???", "???", "???", "SBC zp,X", "INC zp,X", "???",
     "SED", "SBC abs,Y", "???", "???", "???", "SBC abs,X", "INC abs,X", "???"
   ]
-  func logStatus() {
+  public func logStatus() {
     print(String(format:"debug: %04x %02x %@ IR: %02x P: %02x %d %@ A: %02x X: %02x Y: %02x %@",
       pins.address.value,
       pins.data.value,
